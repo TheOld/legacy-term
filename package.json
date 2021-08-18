@@ -1,0 +1,76 @@
+{
+  "name": "vt220-vscode",
+  "displayName": "VT220 Terminal UI",
+  "description": "A VT220 inspired theme with cool effects including chrome styling",
+  "version": "0.0.1",
+  "author": "Leandro Rodrigues",
+  "publisher": "LeandroRodrigues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheOld/legacy-term"
+  },
+  "engines": {
+    "vscode": "^1.33.0"
+  },
+  "keywords": [
+    "retro",
+    "crt",
+    "80s"
+  ],
+  "categories": [
+    "Themes"
+  ],
+  "activationEvents": [
+    "*",
+    "onCommand:vt220.enableEffects"
+  ],
+  "scripts": {
+    "vscode:prepublish": "webpack --mode production",
+    "webpack": "webpack --mode development",
+    "webpack-dev": "webpack --mode development --watch",
+    "build": "webpack --mode production"
+  },
+  "devDependencies": {
+    "webpack": "^5.45.1",
+    "webpack-cli": "^4.7.2"
+  },
+  "dependencies": {
+    "postprocessing": "^4.4.1",
+    "three": "^0.91.0"
+  },
+  "main": "./src/extension.js",
+  "contributes": {
+    "themes": [
+      {
+        "label": "VT220 Green",
+        "uiTheme": "vs-dark",
+        "path": "./themes/vt220-green-color-theme.json"
+      },
+      {
+        "label": "VT220 Red",
+        "uiTheme": "vs-dark",
+        "path": "./themes/vt220-red-color-theme.json"
+      },
+      {
+        "label": "VT220 Blue",
+        "uiTheme": "vs-dark",
+        "path": "./themes/vt220-blue-color-theme.json"
+      },
+      {
+        "label": "VT220 Amber",
+        "uiTheme": "vs-dark",
+        "path": "./themes/vt220-amber-color-theme.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "vt220.enableEffects",
+        "title": "VT220: Enable VT220 UI effects."
+      },
+      {
+        "command": "vt220.disableEffects",
+        "title": "VT220: Disable VT220 UI effects."
+      }
+    ]
+  }
+}
