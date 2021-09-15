@@ -98,20 +98,6 @@ body.windows {
 
 /* Screen effects, vignete, scanlines, etc */
 body.windows:before {
-  /* .monaco-editor:before,
-.pane-body:before,
-.activitybar > .content:before,
-.quick-input-widget:before,
-.statusbar:before,
-.editor-actions:before,
-.gettingStartedContainer:before,
-.settings-editor:before,
-.monaco-workbench
-  .part.editor
-  > .content
-  .gettingStartedContainer
-  .gettingStartedSlideCategories:before,
-.monaco-hover:before  */
   content: ' ';
   display: block;
   position: absolute;
@@ -187,8 +173,8 @@ body.windows:before {
 .activitybar .actions-container .action-item.checked .action-label,
 .activitybar .actions-container .action-item:hover .action-label {
   background: rgb(80, 175, 76) !important;
-  animation: blink2 3s linear alternate-reverse;
-
+  animation: blink2 3s linear forwards;
+  box-shadow: 0 0 2px #80ffc0, 0 0 6px #50af4c, 0 0 10px #50af4c, 0 0 12px #50af4c;
   color: #282828 !important;
 }
 
@@ -286,6 +272,8 @@ body.windows:before {
 
 .notifications-center {
   transform: translateX(-44px) translateY(-16px);
+  box-shadow: 0 0 2px 0px rgb(128 255 192 / 32%), 0 0 6px rgb(80 175 76 / 32%),
+    0 0 10px rgb(80 175 76 / 32%), 0 0 12px rgb(80 175 76 / 32%) !important;
 }
 
 .monaco-workbench > .notifications-toasts {
@@ -592,6 +580,11 @@ body.windows:before {
 .monaco-list .monaco-list-row.selected,
 .monaco-list.list_id_1:not(.drop-target) .monaco-list-row:hover:not(.selected):not(.focused) {
   /* animation: textShadow 1.6s infinite; */
+}
+
+.monaco-workbench .activitybar.right.bordered:before {
+  box-shadow: 0 0 2px rgb(128 255 192 / 50%), 0 0 4px rgb(80 175 76 / 50%),
+    0 0 8px rgb(80 175 76 / 50%), 0 0 12px rgb(80 175 76 / 50%);
 }
 
 .monaco-editor .cursors-layer .cursor {
