@@ -48,24 +48,6 @@ body.windows {
   pointer-events: none;
 }
 
-/* text-shadow: 0 0 3px #fbee67, 0 0 24px #fbee67 */
-
-/* Monitor frame overlay  */
-/* .chromium:after {
-  content: '';
-  background-image: var(--frame);
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-
-  pointer-events: none;
-  opacity: 0.6;
-} */
-
 /* Welcome page */
 .monaco-workbench
   .part.editor
