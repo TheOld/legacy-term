@@ -10,7 +10,7 @@
     "url": "https://github.com/TheOld/legacy-term"
   },
   "engines": {
-    "vscode": "^1.33.0"
+    "vscode": "^1.50.0"
   },
   "keywords": [
     "retro",
@@ -22,22 +22,8 @@
   ],
   "activationEvents": [
     "*",
-    "onCommand:vt220.enableEffects"
+    "onCommand:vt220.viewSettings"
   ],
-  "scripts": {
-    "vscode:prepublish": "webpack --mode production",
-    "webpack": "webpack --mode development",
-    "webpack-dev": "webpack --mode development --watch",
-    "build": "webpack --mode production"
-  },
-  "devDependencies": {
-    "webpack": "^5.45.1",
-    "webpack-cli": "^4.7.2"
-  },
-  "dependencies": {
-    "postprocessing": "^4.4.1",
-    "three": "^0.91.0"
-  },
   "main": "./src/extension.js",
   "contributes": {
     "themes": [
@@ -45,32 +31,47 @@
         "label": "VT220 Green",
         "uiTheme": "vs-dark",
         "path": "./themes/vt220-green-color-theme.json"
-      },
-      {
-        "label": "VT220 Red",
-        "uiTheme": "vs-dark",
-        "path": "./themes/vt220-red-color-theme.json"
-      },
-      {
-        "label": "VT220 Blue",
-        "uiTheme": "vs-dark",
-        "path": "./themes/vt220-blue-color-theme.json"
-      },
-      {
-        "label": "VT220 Amber",
-        "uiTheme": "vs-dark",
-        "path": "./themes/vt220-amber-color-theme.json"
       }
     ],
     "commands": [
       {
         "command": "vt220.enableEffects",
-        "title": "VT220: Enable VT220 UI effects."
+        "title": "VT220: Enable VT220 UI effects"
+      },
+      {
+        "command": "vt220.viewSettings",
+        "title": "VT220: Settings"
       },
       {
         "command": "vt220.disableEffects",
-        "title": "VT220: Disable VT220 UI effects."
+        "title": "VT220: Disable VT220 UI effects"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "VT220",
+      "description": "You can manually set values here, but is just best to use the VT220 Settings webview.",
+      "properties": {
+        "vt220.brightness": {
+          "type": "number",
+          "default": 100,
+          "description": "Set the brightness % value. Requires restart"
+        },
+        "vt220.saturation": {
+          "type": "number",
+          "default": 100,
+          "description": "Set the saturation % value. Requires restart"
+        },
+        "vt220.contrast": {
+          "type": "number",
+          "default": 100,
+          "description": "Set the contrast % value. Requires restart"
+        },
+        "vt220.crt": {
+          "type": "boolean",
+          "default": true,
+          "description": "Toggles the CRT effects. Requires restart"
+        }
+      }
+    }
   }
 }
