@@ -2,7 +2,7 @@
   // Grab body node
   const bodyNode = document.querySelector('body');
 
-  let config = undefined; //vscode.configuration.getConfiguration('vt220');
+  let config = undefined;
 
   // CRT Variables
   let canvas = undefined;
@@ -24,21 +24,7 @@
   let w = 64;
   let h = 32;
 
-  let viewWidth = undefined;
-  let viewHeight = undefined;
-  let noiseCanvas = undefined;
-
-  // Canvas settings
-  const patternSize = 64;
-  const patternScaleX = 3;
-  const patternScaleY = 1;
   const patternRefreshInterval = 1;
-  const patternAlpha = 5; // int between 0 and 255,
-
-  const patternPixelDataLength = patternSize * patternSize * 4;
-  let patternCanvas = undefined;
-  let patternCtx = undefined;
-  let patternData = undefined;
   let frame = 0;
 
   const overrideDocumentStyle = ({ property, value }) => {
@@ -57,15 +43,8 @@
     var updatedThemeStyles = initialThemeStyles;
 
     // Additional classes
-    // bodyNode.classList.add('noise');
-
-    // Update main container with data attribute for style targeting
     const gridView = document.querySelector('.chromium > .monaco-grid-view');
     gridView.classList.add('main-container');
-
-    // setStatusbarTopPosition();
-
-    // window.onresize = handleResize;
 
     const content = document.querySelector('.main-container');
 
@@ -79,8 +58,6 @@
     newStyleTag.innerText = updatedThemeStyles.replace(/(\r\n|\n|\r)/gm, '');
     document.body.appendChild(newStyleTag);
 
-    // initCanvas();
-    // initGrain();
     if (withCRT) {
       const defaultCrtArgs = {
         scanLineColor: 0x33,
@@ -94,8 +71,6 @@
 
       requestAnimationFrame(loop);
     }
-
-    console.log('VT220: initialised!');
 
     // disconnect the observer because we don't need it anymore
     if (obs) {
@@ -117,11 +92,6 @@
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleResize = () => {
-    console.log('VSCode resized');
-    setStatusbarTopPosition();
   };
 
   const initCRT = ({
@@ -189,41 +159,9 @@
     document.querySelector('html').appendChild(overlay);
   };
 
-  // create a canvas which will render the grain
-  const initCanvas = () => {
-    viewWidth = noiseCanvas.width = noiseCanvas.clientWidth;
-    viewHeight = noiseCanvas.height = noiseCanvas.clientHeight;
-    ctx = noiseCanvas.getContext('2d');
-
-    ctx.scale(patternScaleX, patternScaleY);
-  };
-
-  // create a canvas which will be used as a pattern
-  const initGrain = () => {
-    patternCanvas = document.createElement('canvas');
-    patternCanvas.width = patternSize;
-    patternCanvas.height = patternSize;
-    patternCtx = patternCanvas.getContext('2d');
-    patternData = patternCtx.createImageData(patternSize, patternSize);
-  };
-
   // put a random shade of gray into every pixel of the pattern
   const update = () => {
     const { style } = overlay;
-
-    // var value;
-
-    // // FIXME: May not need this anymore since the CRT effects will do it all
-    // for (var i = 0; i < patternPixelDataLength; i += 4) {
-    //   value = (Math.random() * 255) | 0;
-
-    //   patternData.data[i] = value;
-    //   patternData.data[i + 1] = value;
-    //   patternData.data[i + 2] = value;
-    //   patternData.data[i + 3] = patternAlpha;
-    // }
-
-    // patternCtx.putImageData(patternData, 0, 0);
 
     style.backgroundPosition =
       Math.floor(Math.random() * w) + 'px ' + Math.floor((Math.random() * h) / 2) * 2 + 'px';
@@ -235,19 +173,9 @@
     }
   };
 
-  // fill the canvas using the pattern
-  const draw = () => {
-    ctx.clearRect(0, 0, viewWidth, viewHeight);
-
-    ctx.fillStyle = ctx.createPattern(patternCanvas, 'repeat');
-    ctx.fillRect(0, 0, viewWidth, viewHeight);
-  };
-
   const loop = () => {
     if (++frame % patternRefreshInterval === 0) {
       update();
-
-      // draw();
     }
 
     requestAnimationFrame(loop);
