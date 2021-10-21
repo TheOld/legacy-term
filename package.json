@@ -30,7 +30,17 @@
       {
         "label": "VT220 Green",
         "uiTheme": "vs-dark",
-        "path": "./themes/vt220-green-color-theme.json"
+        "path": "./themes/green-theme.json"
+      },
+      {
+        "label": "VT220 Amber",
+        "uiTheme": "vs-dark",
+        "path": "./themes/amber-theme.json"
+      },
+      {
+        "label": "VT220 Blue",
+        "uiTheme": "vs-dark",
+        "path": "./themes/blue-theme.json"
       }
     ],
     "commands": [

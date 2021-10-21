@@ -423,133 +423,188 @@ class SettingsPanel {
 				<meta charset="UTF-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="${stylesUri}" rel="stylesheet">
-				<title>Cat Coding</title>
+				<title>VT220 Settings</title>
 			</head>
 			<body>
        <section class="terminal">
-          <div class="terminal__screen--bevel">
-            <section class="terminal__screen">
-              <div id="crt" class="crt-size frame">
-                <div class="text-area" id="outputEl">
-                  <main class="main">
-                    <h1 class="title">Set up display</h1>
-                    <div>
-                     =====================================================================
-                    </div>
-                    <div class="warning">
-                      <figure>
-                        <img nonce="${nonce}" src="${imageUri}" width="300" id="nope" />
-                        <div class="blend-layer"></div>
-                      </figure>
-                      <h2 class="nope-text">You haven't enabled the main theme styles yet.</h2>
-                      <p>
-                        You can enable the theme by executing the command
-                        <code> > VT220: Enable theme</code>
-                        effects or you can click the big red button bellow (needs a restart) [it might take a few seconds depending on how many extensions you have loading].
-                      </p>
-                    </div>
-                    <div class="content hidden">
-                      <p>Here you can adjust the theme's look and feel.</p>
-                      <p>Play around with the controls, the screen here will show you in realtime the results of your changes.</p>
-                      <p>When you think you got a good setting just hit the "Apply" button. Keep in mind that you'll have to restart VS Code for the changes to take effect.</p>
-                      <p>You can also disable the CRT effects (scanlines, noise and flicker) using the button bellow. They're subtle but can be too intense depending on the contrast/brightness/saturation settings.</p>
-                      <p>To completely disable the theme, click the big red button or execute <code> > VT220: Disable theme</code></p>
-
-                      <form>
-                        <div class="form-element hidden">
-                          <label for="hue">Hue <span id="hue-value">0</span></label>
-                          <div class="slider-hue">
-                            <div class="input-container">
-                              <input type="range" min="0" max="360" value="0" class="slider" id="hue" />
-                              <button class="reset hue">Reset</button>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-element">
-                          <label for="brightness"
-                            >Brightness <span id="brightness-value">100</span></label
-                          >
-                          <div class="input-container">
-                            <input
-                              type="range"
-                              min="0"
-                              max="200"
-                              step="1"
-                              class="slider"
-                              id="brightness"
-                            />
-                            <button class="reset brightness">Reset</button>
-                          </div>
-                        </div>
-                        <div class="form-element">
-                          <label for="contrast">Contrast <span id="contrast-value">100</span></label>
-                          <div class="input-container">
-                            <input type="range" min="0" max="200" step="1" class="slider" id="contrast" />
-                            <button class="reset contrast">Reset</button>
-                          </div>
-                        </div>
-                        <div class="form-element">
-                          <label for="saturation"
-                            >Saturation <span id="saturation-value">100</span></label
-                          >
-                          <div class="input-container">
-                            <input
-                              type="range"
-                              min="0"
-                              max="400"
-                              step="1"
-                              class="slider"
-                              id="saturation"
-                            />
-                            <button class="reset saturation">Reset</button>
-                          </div>
-                        </div>
-
-                        <button class="apply push-button after push-button--enabled">Apply styles</button>
-                      </form>
-                    </div>
-                  </main>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          <section class="terminal__lower">
-            <div class="terminal__front-panel">
-              <div class="plaque">
-                <div class="front">
-                  <div class="brand">
-                    <span>d</span>
-                    <span>i</span>
-                    <span>g</span>
-                    <span>i</span>
-                    <span>t</span>
-                    <span>a</span>
-                    <span>l</span>
+        <div class="terminal__screen--bevel">
+          <section class="terminal__screen">
+            <div id="crt" class="crt-size frame">
+              <div class="text-area" id="outputEl">
+                <main class="main">
+                  <h1 class="title">Set up display</h1>
+                  <div>=====================================================================</div>
+                  <div class="warning">
+                    <figure>
+                      <img nonce="${nonce}" src="${imageUri}" width="300" id="nope" />
+                      <div class="blend-layer"></div>
+                    </figure>
+                    <h2 class="nope-text">You haven't enabled the main theme styles yet.</h2>
+                    <p>
+                      You can enable the theme by executing the command
+                      <code> > VT220: Enable theme</code>
+                      effects or you can switch the power button bellow (needs a restart) [it might
+                      take a few seconds depending on how many extensions you have loading].
+                    </p>
                   </div>
-                  <span class="model">VT220</span>
-                </div>
+                  <div class="content hidden">
+                    <p>Here you can adjust the theme's look and feel.</p>
+                    <p>
+                      Play around with the controls, the screen here will show you in realtime the
+                      results of your changes.
+                    </p>
+                    <p>
+                      When you think you got a good setting just hit the "Apply" button. Keep in mind
+                      that you'll have to restart VS Code for the changes to take effect.
+                    </p>
+                    <p>
+                      You can also disable the CRT effects (scanlines, noise and flicker) using the
+                      button bellow. They're subtle but can be too intense depending on the
+                      contrast/brightness/saturation settings.
+                    </p>
+                    <p>
+                      To completely disable the theme just switch the power button or execute
+                      <code> > VT220: Disable theme</code>
+                    </p>
+
+                    <form>
+                      <div class="form-element hidden">
+                        <label for="hue">Hue <span id="hue-value">0</span></label>
+                        <div class="slider-hue">
+                          <div class="input-container">
+                            <input type="range" min="0" max="360" value="0" class="slider" id="hue" />
+                            <button class="reset hue">Reset</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-element">
+                        <label for="brightness"
+                          >Brightness <span id="brightness-value">100</span></label
+                        >
+                        <div class="input-container">
+                          <input
+                            type="range"
+                            min="0"
+                            max="200"
+                            step="1"
+                            class="slider"
+                            id="brightness"
+                          />
+                          <button class="reset brightness">Reset</button>
+                        </div>
+                      </div>
+                      <div class="form-element">
+                        <label for="contrast">Contrast <span id="contrast-value">100</span></label>
+                        <div class="input-container">
+                          <input
+                            type="range"
+                            min="0"
+                            max="200"
+                            step="1"
+                            class="slider"
+                            id="contrast"
+                          />
+                          <button class="reset contrast">Reset</button>
+                        </div>
+                      </div>
+                      <div class="form-element">
+                        <label for="saturation"
+                          >Saturation <span id="saturation-value">100</span></label
+                        >
+                        <div class="input-container">
+                          <input
+                            type="range"
+                            min="0"
+                            max="400"
+                            step="1"
+                            class="slider"
+                            id="saturation"
+                          />
+                          <button class="reset saturation">Reset</button>
+                        </div>
+                      </div>
+
+                      <button class="apply push-button after push-button--enabled">
+                        Apply styles
+                      </button>
+                    </form>
+                  </div>
+                </main>
               </div>
-              <div class="switches hidden">
+            </div>
+          </section>
+        </div>
+
+        <section class="terminal__lower">
+          <div class="terminal__front-panel">
+            <div class="plaque">
+              <div class="front">
+                <div class="brand">
+                  <span>d</span>
+                  <span>i</span>
+                  <span>g</span>
+                  <span>i</span>
+                  <span>t</span>
+                  <span>a</span>
+                  <span>l</span>
+                </div>
+                <span class="model">VT220</span>
+              </div>
+            </div>
+            <span class="power-light"></span>
+
+            <div class="switches__container">
+              <div class="switches ">
+                <p class="button__label">CRT Effects</p>
                 <div class="button__container">
                   <label class="button">
                     <input type="checkbox" id="crt-toggle" />
                     <div class="button__surface">ΟI</div>
                     <b class="button__raised-surface"></b>
                   </label>
-                  <span class="button__label">CRT Effects</span>
+
                 </div>
               </div>
-              <span class="power-light"></span>
-              <label class="button">
-                <input type="checkbox" id="power" />
-                <div class="button__surface">ΟI</div>
-                <b class="button__raised-surface"></b>
-              </label>
+              <div class="switches">
+                <p class="button__label">Phosphor selection</p>
+                <div class="button__container">
+                  <label class="button">
+                    <input type="radio" name="phosphor" id="green" checked value="green"/>
+                    <div class="button__surface">ΟI</div>
+                    <b class="button__raised-surface"></b>
+                  </label>
+                  <span class="button__label">P1 GJ <span class="label-color label-color--green">green</span>
+                  </span>
+                </div>
+                <div class="button__container">
+                  <label class="button">
+                    <input type="radio" name="phosphor" id="amber" value="amber"/>
+                    <div class="button__surface">ΟI</div>
+                    <b class="button__raised-surface"></b>
+                  </label>
+                  <span class="button__label">P3 <span class="label-color label-color--amber">amber</span>
+                  </span>
+                </div>
+                <div class="button__container">
+                  <label class="button">
+                    <input type="radio" name="phosphor" value="blue" id="blue" />
+                    <div class="button__surface">ΟI</div>
+                    <b class="button__raised-surface"></b>
+                  </label>
+                  <span class="button__label">P5 <span class="label-color label-color--blue">blue</span></span>
+                </div>
+              </div>
             </div>
-          </section>
+
+            <label class="power-button">
+              <input type="checkbox" id="power" class="toggle" />
+              <div class="switch"></div>
+            </label>
+          </div>
         </section>
+      </section>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
+
 			</body>
 			</html>`;
   }

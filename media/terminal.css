@@ -106,7 +106,7 @@ body {
   width: 65rem;
   height: 50rem;
   border-radius: 4.5rem;
-  margin: 0 auto;
+  margin: 0 auto 10rem;
   box-shadow: inset 0 0 12rem 5rem rgba(0, 0, 0, 0.15), inset -45rem -25rem 3rem -48rem #fbfaf9,
     inset 40rem 25rem 10rem -40rem rgba(128, 116, 92, 0.7),
     inset 0 0 3rem 45rem rgba(222, 132, 10, 0.15), inset -10rem 0 12rem -7rem #dbd6cd,
@@ -264,17 +264,20 @@ figure img {
 .terminal__lower {
   border-radius: 0 0 4rem 4rem;
   border-top: 0.5rem solid #867960;
-  margin-top: 10rem;
+
   height: 10rem;
-  box-shadow: inset 0 0 10rem rgba(128, 116, 92, 0.85), 0 0 2px 2px #80745c, 0 0 4px #f0eeeb,
-    inset -2px -1px 1px #dbd6cd, inset 0 1.5rem 3rem #a2957c;
+
+  box-shadow: inset 0 0 10rem rgb(128 116 92 / 85%), 0 0 2px 2px #80745c, 0 0 4px #f0eeeb, inset -2px -1px 1px #dbd6cd, inset 0 1.5rem 3rem #a2957c;
 }
 
 .terminal__front-panel {
   display: flex;
   position: relative;
+  flex-direction: column;
   width: 100%;
+  margin-top: -10rem;
 }
+
 .terminal__front-panel .button {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4), inset 0 2px 1px -1px rgba(255, 255, 255, 0.7),
     inset 1px 0 4px #470e0e, inset 8px 0 0 #e88585, inset -6px 0 0 #5c1212;
@@ -328,17 +331,16 @@ figure img {
   width: 50%;
 }
 .terminal__front-panel .power-light {
-  background: #364a36;
-  border-radius: 0.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 0.75rem rgba(0, 0, 0, 0.2), inset 1px 1px 0 rgba(0, 0, 0, 0.5),
-    inset -1px 0 1px rgba(255, 255, 255, 0.5), -1px -1px 0 #635946, 1px 1px 0 #dbd6cd;
-  height: 0.75rem;
-  position: absolute;
-  right: 14rem;
-  top: -5.5rem;
-  transition: 0.2s;
-  width: 2.3rem;
+    background: #364a36;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 0.75rem rgb(0 0 0 / 20%), inset 1px 1px 0 rgb(0 0 0 / 50%), inset -1px 0 1px rgb(255 255 255 / 50%), -1px -1px 0 #635946, 1px 1px 0 #dbd6cd;
+    height: 0.75rem;
+    position: absolute;
+    right: 16rem;
+    top: 4rem;
+    transition: 0.2s;
+    width: 2.3rem;
 }
 .terminal__front-panel .power-light::before {
   border-radius: 0.125rem;
@@ -350,10 +352,7 @@ figure img {
   transition: 0.5s;
   width: 1.75rem;
 }
-.terminal__front-panel input {
-  position: absolute;
-  visibility: hidden;
-}
+
 .terminal__front-panel input:checked ~ .button__surface {
   background: linear-gradient(to right, firebrick 0%, #9d1e1e 1%, #d02828 47%, firebrick 100%);
   box-shadow: inset 2px 0 0 #f4c5c5;
@@ -370,16 +369,15 @@ figure img {
   transition: 0.1s;
 }
 .terminal__front-panel .plaque {
-  margin: 3rem auto auto 4rem;
-  top: -10rem;
-  left: 8rem;
-  border-radius: 8px;
-  /* height: 4rem; */
-  position: relative;
 
+  top: 3rem;
+  left: 11.6rem;
+  border-radius: 8px;
+  position: relative;
   letter-spacing: 1px;
   box-shadow: 6px 4px 4px 1px #00000066;
   background-color: rgb(128 116 92 / 26%);
+  width: 256px;
 }
 
 .terminal__front-panel .plaque .front {
@@ -434,12 +432,27 @@ figure img {
   margin-top: -1.2rem;
 }
 
+.switches__container {
+  display: flex;
+  position: relative;
+  top: 7.2rem;
+  left: 7.7rem;
+}
+
+.switches__container p {
+  margin: 0 0 8px 0!important;
+  max-width: 100%;
+}
+
 .switches {
   display: flex;
   flex-direction: column;
-  left: 8rem;
-  top: 4rem;
+  margin-right: 32px;
+}
+
+.switches input {
   position: absolute;
+  visibility: hidden;
 }
 
 .button__container {
@@ -450,7 +463,7 @@ figure img {
 
 .switches .button {
   height: 1.5rem;
-  margin: 0 8px;
+  margin: 0 8px 0 0;
   padding-top: 1px;
   width: 3rem;
   border-width: 1px;
@@ -480,11 +493,34 @@ figure img {
 
 .switches .button__label {
   margin-left: 12px;
-
-  color: firebrick;
+  color: rgba(0, 0, 0, 0.7);
+  text-shadow: 0 0.1em 0 rgb(255 255 255 / 20%);
   display: block;
+  font-family: var(--font-share-tech);
+}
 
-  font-family: Consolas, 'Courier New', monospace !important;
+.button__container .button__label {
+  font-size: 16px;
+}
+
+.label-color {
+  display: inline;
+  background: var(--carbon);
+  padding: 2px 4px;
+  border-radius: 2px;
+  text-shadow: none !important;
+}
+
+.label-color--green {
+  color: var(--foreground);
+}
+
+.label-color--amber {
+  color: #ffb000;
+}
+
+.label-color--blue {
+  color: #03e7ff;
 }
 
 .nope-text {
@@ -620,6 +656,82 @@ input[type='range']::-webkit-slider-thumb:hover {
 .hidden {
   display: none;
 }
+
+
+:root {
+    --font-size: 20px;
+}
+
+.power-button {
+  position: absolute;
+  transform: rotate(-90deg);
+  right: 8rem;
+  top: 10rem;
+}
+
+.toggle {
+    position: absolute;
+    font-size: var(--font-size);
+    width: 5em;
+    height: 8em;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    transform: scale(0.6);
+    z-index: 2;
+}
+
+.toggle ~ .switch {
+    position: relative;
+    width: 5em;
+    height: 8em;
+    transition: 0.1s;
+    background: linear-gradient(#dbd6cd, #c6beaf);
+    border-radius: 1.2em;
+    transform: scale(0.6);
+    box-shadow:
+        inset 0 -0.2em 0.4em #80745ced, inset 0 -0.8em 0 0.1em #80745c6b, 0 0 0 0.1em rgb(116 116 116 / 80%), 0 0.6em 0.6em rgb(41 41 41 / 30%), 0 0 0 0.4em #c6beaf;
+}
+
+.toggle ~ .switch::before,
+.toggle ~ .switch::after {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 1.4em;
+    font-family: sans-serif;
+}
+
+.toggle ~ .switch::before {
+    content: '|';
+    bottom: 1em;
+    color: rgba(0, 0, 0, 0.5);
+    text-shadow: 0 0.1em 0 rgba(255, 255, 255, 0.8);
+}
+
+.toggle ~ .switch::after {
+    content: 'O';
+    top: 0.6em;
+    color: rgba(0, 0, 0, 0.45);
+    text-shadow: 0 0.1em 0 rgba(255, 255, 255, 0.4);
+}
+
+.toggle:checked ~ .switch {
+    background: linear-gradient(#c1b59f, #dbd6cd);
+    box-shadow:
+        inset 0 0.2em 0.4em #dbd6cdbf, inset 0 0.8em 0 0.1em rgb(251 250 249 / 77%), 0 0 0 0.1em rgb(116 116 116 / 80%), 0 -0.2em 0.2em rgb(41 41 41 / 18%), 0 0 0 0.4em #c6beaf;
+}
+
+.toggle:checked ~ .switch::before {
+    bottom: 0.3em;
+    text-shadow: 0 0.1em 0 rgba(255, 255, 255, 0.5);
+}
+
+.toggle:checked ~ .switch::after {
+    top: 1.2em;
+    text-shadow: 0 0.1em 0 rgba(255, 255, 255, 0.15);
+}
+
 
 @keyframes noise {
   0% {

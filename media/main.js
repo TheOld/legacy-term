@@ -12,6 +12,8 @@
   const applyButton = document.querySelector('.apply');
   const enableThemeButton = document.querySelector('#power');
 
+  const phosphorInputs = document.querySelectorAll('input[name="phosphor"]');
+
   // Attach event listeners
   hueInput.addEventListener('input', setPreview);
   brightnessInput.addEventListener('input', setPreview);
@@ -19,6 +21,10 @@
   saturationInput.addEventListener('input', setPreview);
 
   crtToggle.addEventListener('click', toggleCRT);
+
+  phosphorInputs.forEach((input) => {
+    input.addEventListener('change', changeColorScheme);
+  });
 
   enableThemeButton.addEventListener('click', applyTheme);
   applyButton.addEventListener('click', applyConfig);
@@ -259,5 +265,10 @@
 
   function applyTheme() {
     vscode.postMessage({ prop: 'toggle-theme' });
+  }
+
+  function changeColorScheme(e) {
+    const scheme = document.querySelector('input[name="phosphor"]:checked').value;
+    console.log(scheme);
   }
 })();

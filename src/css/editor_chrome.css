@@ -416,7 +416,7 @@ body.windows {
 .monaco-workbench .part > .title > .title-label h2 {
   font-size: 16px;
   color: var(--foreground) !important;
-  text-shadow: 0 0 3px var(--foreground), 0 0 24px var(--foreground);
+  text-shadow: 0 0 3px var(--foreground), 0 0 12px var(--foreground);
   font-family: var(--font-glass);
 }
 
@@ -436,9 +436,8 @@ body.windows {
 
 .monaco-editor .line-numbers.active-line-number {
   color: var(--foreground) !important;
-  /* text-shadow: 0 0 3px var(--foreground), 0 0 12px var(--foreground); */
-  animation: lineNumberGlow 1s forwards;
-  animation-delay: 120ms;
+  animation: lineNumberGlow 300ms forwards;
+  animation-delay: 80ms;
 }
 
 .activitybar.left.bordered:before {
