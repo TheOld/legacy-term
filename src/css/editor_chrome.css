@@ -116,7 +116,7 @@ body.windows {
 }
 
 .main-container .split-view-container > div:nth-of-type(4) {
-  background-color: #282828 !important;
+  background-color: var(--background) !important;
 }
 
 .window-appicon,
@@ -155,7 +155,7 @@ body.windows {
 
 .activitybar .actions-container .action-item {
   transition: all 220ms ease-in-out;
-  box-shadow: 0 0 2px #80ffc000, 0 0 6px #4faf4c00, 0 0 10px #4faf4c00, 0 0 12px #50af4c00;
+
 }
 
 .activitybar .actions-container .action-item.checked,
@@ -166,7 +166,7 @@ body.windows {
   animation: blink2 3s linear forwards;
 
   box-shadow: 0 0 3px var(--foreground), 0 0 6px var(--foreground) !important;
-  color: #282828 !important;
+  color: var(--background) !important;
 }
 
 .monaco-workbench
@@ -248,7 +248,7 @@ body.windows {
 /* Quick input widget (command palette)  */
 .quick-input-widget {
   /* animation: border */
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--foreground);
   z-index: 10000;
 }
 
@@ -370,7 +370,7 @@ body.windows {
   content: '';
   height: 1px;
   width: 100%;
-  background-color: #50af4c;
+  background-color: var(--foreground);
   position: absolute;
 }
 
@@ -436,8 +436,9 @@ body.windows {
 
 .monaco-editor .line-numbers.active-line-number {
   color: var(--foreground) !important;
-  animation: lineNumberGlow 300ms forwards;
-  animation-delay: 80ms;
+  text-shadow: 0 0 3px var(--foreground), 0 0 12px var(--foreground);
+  /* animation: lineNumberGlow 300ms forwards;
+  animation-delay: 80ms; */
 }
 
 .activitybar.left.bordered:before {
@@ -585,11 +586,11 @@ body.windows {
 .monaco-list .monaco-list-row.selected,
 .monaco-list.list_id_1:not(.drop-target) .monaco-list-row:hover:not(.selected):not(.focused) {
   /* animation: textShadow 1.6s infinite; */
-  background-color: rgba(80, 175, 76, 0.2);
+  /* background-color: rgba(80, 175, 76, 0.2); */
 }
 
 .monaco-editor .cursors-layer .cursor {
-  box-shadow: 0 0 2px #80ffc0, 0 0 6px #50af4c, 0 0 10px #50af4c, 0 0 12px #50af4c;
+  box-shadow: 0 0 3px var(--foreground), 0 0 12px var(--foreground);
 }
 
 /* Dropdowns */
@@ -598,14 +599,11 @@ body.windows {
   .monaco-list
   .monaco-list-row.focused {
   box-shadow: none !important;
-  color: #282828 !important;
-  background-color: #50af4c !important;
+  color: var(--background) !important;
+  background-color: var(--foreground) !important;
 }
 
-/* .monaco-workbench .part.editor>.content .editor-group-container>.title .title-label a,  {
-    animation: textShadow 1.6s infinite;
-    will-change: textShadow;
-} */
+
 
 /* Helper classes and animations */
 
@@ -1201,14 +1199,14 @@ body.windows {
 
 @keyframes border-flicker {
   2% {
-    border: 1px solid #50af4c;
+    border: 1px solid var(--foreground);
   }
   3% {
     border: 1px solid transparent;
     box-shadow: none;
   }
   5% {
-    border: 1px solid #50af4c;
+    border: 1px solid var(--foreground);
   }
   6% {
     border: 1px solid transparent;
@@ -1216,14 +1214,14 @@ body.windows {
     box-shadow: none;
   }
   7% {
-    border: 1px solid #50af4c;
+    border: 1px solid var(--foreground);
   }
   9% {
     border: 1px solid transparent;
     box-shadow: none;
   }
   13% {
-    border: 1px solid #50af4c;
+    border: 1px solid var(--foreground);
   }
   16% {
     border: 1px solid transparent;
@@ -1231,10 +1229,10 @@ body.windows {
     box-shadow: none;
   }
   54% {
-    border: 1px solid #50af4c;
+    border: 1px solid var(--foreground);
   }
   100% {
-    border: 1px solid #50af4c;
+    border: 1px solid var(--foreground);
   }
 }
 

@@ -81,7 +81,10 @@
         return;
       }
 
-      const { brightness, saturation, contrast, crt } = config.data;
+
+      console.log('file: main.js ~ line 86 ~ setControlValues ~ config.data', config.data);
+
+      const { brightness, saturation, contrast, crt, color } = config.data;
 
       // let hueVal = hue.replace(/\D/g, '');
 
@@ -94,6 +97,20 @@
         crtCtrl.setAttribute('checked', 'checked');
       } else {
         crtCtrl.removeAttribute('checked');
+      }
+
+      switch (color) {
+        case 'blue':
+          const blue = document.querySelector('#blue');
+          blue.setAttribute('checked', true);
+          break;
+        case 'amber':
+          document.querySelector('#amber').setAttribute('checked', true);
+          break;
+        case 'green':
+        default:
+          document.querySelector('#green').setAttribute('checked', true);
+          break;
       }
 
       const brightnessLabel = document.querySelector('#brightness-value');
@@ -139,6 +156,7 @@
 
       // overrideDocumentStyle({ property: '--hue', value: `${hue}deg` });
       // hueLabel.textContent = `${hue}deg`;
+      changeColorScheme();
 
       const data = {
         // hue: `${hue}deg`,
@@ -207,11 +225,14 @@
 
       const warnContainer = document.querySelector('.warning');
       const content = document.querySelector('.content');
-      const switches = document.querySelector('.switches');
+      const switches = document.querySelectorAll('.switches');
 
       warnContainer.classList.add('hidden');
       content.classList.remove('hidden');
-      switches.classList.remove('hidden');
+
+      switches.forEach(swt => {
+        swt.classList.remove('hidden');
+      });
 
       const power = document.querySelector('#power');
       const powerLight = document.querySelector('.power-light');
@@ -252,10 +273,11 @@
       const contrast = contrastInput.value;
       const saturation = saturationInput.value;
       const crt = crtToggle.checked;
+      const scheme = document.querySelector('input[name="phosphor"]:checked').value;
 
       vscode.postMessage({
         prop: 'settings',
-        value: { hue: `${hue}deg`, brightness, contrast, saturation, crt },
+        value: { hue: `${hue}deg`, brightness, contrast, saturation, crt, color: scheme },
       });
     } catch (error) {
       console.warn(error);
@@ -267,8 +289,20 @@
     vscode.postMessage({ prop: 'toggle-theme' });
   }
 
-  function changeColorScheme(e) {
+  function changeColorScheme() {
     const scheme = document.querySelector('input[name="phosphor"]:checked').value;
-    console.log(scheme);
+
+    switch (scheme) {
+      case 'blue':
+        overrideDocumentStyle({ property: '--foreground', value: `#00b7ff` });
+        break;
+      case 'amber':
+        overrideDocumentStyle({ property: '--foreground', value: `#ffb000` });
+        break;
+      case 'green':
+      default:
+        overrideDocumentStyle({ property: '--foreground', value: `#50af4c` });
+        break;
+    }
   }
 })();

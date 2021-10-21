@@ -57,7 +57,8 @@ function init(config) {
     const html = fs.readFileSync(htmlFile, 'utf-8');
 
     // By default we get the values from the config
-    let { contrast, saturation, brightness, crt } = vscode.workspace.getConfiguration('vt220');
+    let { contrast, saturation, brightness, crt, color } =
+      vscode.workspace.getConfiguration('vt220');
 
     // If we're editing, we'll get the values from the UI instead
     if (config) {
@@ -66,6 +67,21 @@ function init(config) {
       saturation = config.saturation;
       brightness = config.brightness;
       crt = config.crt;
+      color = config.color;
+    }
+
+    let foreground = '#50af4c';
+    switch (color) {
+      case 'blue':
+        foreground = `#00b7ff`;
+        break;
+      case 'amber':
+        foreground = `#ffb000`;
+        break;
+      case 'green':
+      default:
+        foreground = '#50af4c';
+        break;
     }
 
     // Generate chrome styles from css to inject
@@ -76,7 +92,8 @@ function init(config) {
     const themeWithSat = themeWithChrome.replace(/\[SATURATION\]/g, saturation);
     const themeWithContrast = themeWithSat.replace(/\[CONTRAST\]/g, contrast);
     const themeWithBrightness = themeWithContrast.replace(/\[BRIGHTNESS\]/g, brightness);
-    const themeWithCrt = themeWithBrightness.replace(/\[CRT\]/g, crt);
+    const themeWithForeground = themeWithBrightness.replace(/\[FOREGROUND\]/g, foreground);
+    const themeWithCrt = themeWithForeground.replace(/\[CRT\]/g, crt);
 
     fs.writeFileSync(templateFile, themeWithCrt, 'utf-8');
 
@@ -97,6 +114,8 @@ function init(config) {
     output += '</html>';
 
     fs.writeFileSync(htmlFile, output, 'utf-8');
+
+    setColorScheme(config);
 
     if (!isEnabled) {
       vscode.window
@@ -127,6 +146,23 @@ function init(config) {
       vscode.window.showErrorMessage('Something went wrong when starting VT220');
       return;
     }
+  }
+}
+
+function setColorScheme(config) {
+  try {
+    const cfg = vscode.workspace.getConfiguration('vt220');
+
+    let color = config ? config.color : cfg.color;
+
+    const src = path.join(__dirname, '..', 'themes', `${config.color}.json`);
+    const dest = path.join(__dirname, '..', 'themes', 'vt220.json');
+
+    fs.copyFile(src, dest, () => {
+      console.log('Copied Successfully!');
+    });
+  } catch (error) {
+    vscode.window.showErrorMessage('Something went wrong when starting VT220');
   }
 }
 
@@ -311,7 +347,7 @@ class SettingsPanel {
         console.log(message);
         switch (message.prop) {
           case 'settings':
-            const { hue, brightness, contrast, saturation } = message.value;
+            const { hue, brightness, contrast, saturation, color } = message.value;
             // vscode.workspace
             //   .getConfiguration()
             //   .update('vt220.hue', hue, vscode.ConfigurationTarget.Global);
@@ -324,6 +360,9 @@ class SettingsPanel {
             vscode.workspace
               .getConfiguration()
               .update('vt220.contrast', parseInt(contrast), vscode.ConfigurationTarget.Global);
+            vscode.workspace
+              .getConfiguration()
+              .update('vt220.color', color, vscode.ConfigurationTarget.Global);
 
             init(message.value);
 
@@ -432,8 +471,9 @@ class SettingsPanel {
             <div id="crt" class="crt-size frame">
               <div class="text-area" id="outputEl">
                 <main class="main">
-                  <h1 class="title">Set up display</h1>
-                  <div>=====================================================================</div>
+                 <div>***********************************************************************************</div>
+                  <h1 class="title">VT220 display set up</h1>
+                  <div>***********************************************************************************</div>
                   <div class="warning">
                     <figure>
                       <img nonce="${nonce}" src="${imageUri}" width="300" id="nope" />
@@ -441,21 +481,19 @@ class SettingsPanel {
                     </figure>
                     <h2 class="nope-text">You haven't enabled the main theme styles yet.</h2>
                     <p>
-                      You can enable the theme by executing the command
-                      <code> > VT220: Enable theme</code>
-                      effects or you can switch the power button bellow (needs a restart) [it might
-                      take a few seconds depending on how many extensions you have loading].
+                      You can enable the theme by switching the power button or by executing the command
+                      <code> > VT220: Enable theme</code> on the Command Palette (needs a restart) [may take a few seconds].
                     </p>
                   </div>
                   <div class="content hidden">
-                    <p>Here you can adjust the theme's look and feel.</p>
+                    <h2>Now you can adjust your terminal in real time!</h2>
                     <p>
-                      Play around with the controls, the screen here will show you in realtime the
-                      results of your changes.
+                      Play around with the controls, the screen will show you the result of your changes.
                     </p>
+                    <p>Select the desired color using the phosphor selection (not real phosphor)</p>
                     <p>
-                      When you think you got a good setting just hit the "Apply" button. Keep in mind
-                      that you'll have to restart VS Code for the changes to take effect.
+                    <p>
+                      Hit the "Apply" button once you're done.
                     </p>
                     <p>
                       You can also disable the CRT effects (scanlines, noise and flicker) using the
@@ -464,7 +502,7 @@ class SettingsPanel {
                     </p>
                     <p>
                       To completely disable the theme just switch the power button or execute
-                      <code> > VT220: Disable theme</code>
+                      <code> > VT220: Disable theme</code> on the Command Palette
                     </p>
 
                     <form>
@@ -554,7 +592,7 @@ class SettingsPanel {
             <span class="power-light"></span>
 
             <div class="switches__container">
-              <div class="switches ">
+              <div class="switches hidden">
                 <p class="button__label">CRT Effects</p>
                 <div class="button__container">
                   <label class="button">
@@ -565,11 +603,11 @@ class SettingsPanel {
 
                 </div>
               </div>
-              <div class="switches">
+              <div class="switches hidden">
                 <p class="button__label">Phosphor selection</p>
                 <div class="button__container">
                   <label class="button">
-                    <input type="radio" name="phosphor" id="green" checked value="green"/>
+                    <input type="radio" name="phosphor" id="green" value="green"/>
                     <div class="button__surface">ΟI</div>
                     <b class="button__raised-surface"></b>
                   </label>
@@ -591,7 +629,7 @@ class SettingsPanel {
                     <div class="button__surface">ΟI</div>
                     <b class="button__raised-surface"></b>
                   </label>
-                  <span class="button__label">P5 <span class="label-color label-color--blue">blue</span></span>
+                  <span class="button__label">P55 BAM <span class="label-color label-color--blue">blue</span></span>
                 </div>
               </div>
             </div>

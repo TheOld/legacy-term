@@ -28,19 +28,9 @@
   "contributes": {
     "themes": [
       {
-        "label": "VT220 Green",
+        "label": "VT220",
         "uiTheme": "vs-dark",
-        "path": "./themes/green-theme.json"
-      },
-      {
-        "label": "VT220 Amber",
-        "uiTheme": "vs-dark",
-        "path": "./themes/amber-theme.json"
-      },
-      {
-        "label": "VT220 Blue",
-        "uiTheme": "vs-dark",
-        "path": "./themes/blue-theme.json"
+        "path": "./themes/vt220.json"
       }
     ],
     "commands": [
@@ -80,6 +70,11 @@
           "type": "boolean",
           "default": true,
           "description": "Toggles the CRT effects. Requires restart"
+        },
+        "vt220.color": {
+          "type": "string",
+          "default": "green",
+          "description": "Set the color scheme. Requires restart"
         }
       }
     }

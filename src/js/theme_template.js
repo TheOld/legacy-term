@@ -53,7 +53,7 @@
     console.info(styles);
 
     /* append the remaining styles */
-    updatedThemeStyles = `${updatedThemeStyles}[CHROME_STYLES] :root { --saturation: [SATURATION]%; --contrast: [CONTRAST]%; --brightness: [BRIGHTNESS]%; }`;
+    updatedThemeStyles = `${updatedThemeStyles}[CHROME_STYLES] :root { --saturation: [SATURATION]%; --contrast: [CONTRAST]%; --brightness: [BRIGHTNESS]%; --foreground: [FOREGROUND];}`;
 
     const newStyleTag = document.createElement('style');
     newStyleTag.setAttribute('id', 'vt220-theme-styles');
