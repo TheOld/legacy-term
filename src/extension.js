@@ -57,14 +57,14 @@ function init(config) {
     const html = fs.readFileSync(htmlFile, 'utf-8');
 
     // By default we get the values from the config
-    let { hue, contrast, saturation, brightness, crt } = vscode.workspace.getConfiguration('vt220');
+    let { contrast, saturation, brightness, crt } = vscode.workspace.getConfiguration('vt220');
 
     // If we're editing, we'll get the values from the UI instead
     if (config) {
       // hue = config.hue || hue;
-      contrast = config.contrast || contrast;
-      saturation = config.saturation || saturation;
-      brightness = config.brightness || brightness;
+      contrast = config.contrast;
+      saturation = config.saturation;
+      brightness = config.brightness;
       crt = config.crt;
     }
 
@@ -437,11 +437,14 @@ class SettingsPanel {
                      =====================================================================
                     </div>
                     <div class="warning">
-                      <img nonce="${nonce}" src="${imageUri}" width="300" id="nope" />
+                      <figure>
+                        <img nonce="${nonce}" src="${imageUri}" width="300" id="nope" />
+                        <div class="blend-layer"></div>
+                      </figure>
                       <h2 class="nope-text">You haven't enabled the main theme styles yet.</h2>
                       <p>
-                        You can enable the theme using the
-                        <code>Command Palette > VT220: Enable VT220 UI</code>
+                        You can enable the theme by executing the command
+                        <code> > VT220: Enable theme</code>
                         effects or you can click the big red button bellow (needs a restart) [it might take a few seconds depending on how many extensions you have loading].
                       </p>
                     </div>
@@ -449,8 +452,8 @@ class SettingsPanel {
                       <p>Here you can adjust the theme's look and feel.</p>
                       <p>Play around with the controls, the screen here will show you in realtime the results of your changes.</p>
                       <p>When you think you got a good setting just hit the "Apply" button. Keep in mind that you'll have to restart VS Code for the changes to take effect.</p>
-                      <p>You can also disable the CRT effect (scanlines, noise and flicker) background effects using the button bellow. They're subtle but can be too intense depending on the contrast/brightness/saturation settings.</p>
-                      <p>To completely disable the UI effects, click the big red button</p>
+                      <p>You can also disable the CRT effects (scanlines, noise and flicker) using the button bellow. They're subtle but can be too intense depending on the contrast/brightness/saturation settings.</p>
+                      <p>To completely disable the theme, click the big red button or execute <code> > VT220: Disable theme</code></p>
 
                       <form>
                         <div class="form-element hidden">

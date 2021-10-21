@@ -31,7 +31,6 @@
   // Handle messages sent from the extension to the webview
   window.addEventListener('message', (event) => {
     const message = event.data;
-    console.log('file: main.js ~ line 32 ~ window.addEventListener ~ message type', message);
 
     switch (message.type) {
       case 'config-changed':
@@ -40,7 +39,6 @@
         vscode.setState({ config: message });
         setControlValues();
         setPreview();
-
         break;
       }
       case 'reload': {
@@ -48,7 +46,6 @@
         vscode.setState({ config: message });
         setControlValues();
         setPreview();
-        toggleElementsState();
         break;
       }
       case 'initialized': {

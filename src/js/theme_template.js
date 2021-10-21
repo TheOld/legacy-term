@@ -24,7 +24,7 @@
   let w = 64;
   let h = 32;
 
-  const patternRefreshInterval = 1;
+  const patternRefreshInterval = 0.5;
   let frame = 0;
 
   const overrideDocumentStyle = ({ property, value }) => {
@@ -48,10 +48,12 @@
 
     const content = document.querySelector('.main-container');
 
-    const styles = `:root { --saturation: [SATURATION]%; --contrast: [CONTRAST]%; --brightness: [BRIGHTNESS]% }`;
+    const styles = `:root { --saturation: [SATURATION]%; --contrast: [CONTRAST]%; --brightness: [BRIGHTNESS]%; }`;
+
+    console.info(styles);
 
     /* append the remaining styles */
-    updatedThemeStyles = `${updatedThemeStyles}[CHROME_STYLES]${styles}`;
+    updatedThemeStyles = `${updatedThemeStyles}[CHROME_STYLES] :root { --saturation: [SATURATION]%; --contrast: [CONTRAST]%; --brightness: [BRIGHTNESS]%; }`;
 
     const newStyleTag = document.createElement('style');
     newStyleTag.setAttribute('id', 'vt220-theme-styles');

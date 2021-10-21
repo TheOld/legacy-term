@@ -36,7 +36,7 @@
     "commands": [
       {
         "command": "vt220.enableEffects",
-        "title": "VT220: Enable VT220 UI effects"
+        "title": "VT220: Enable theme"
       },
       {
         "command": "vt220.viewSettings",
@@ -44,7 +44,7 @@
       },
       {
         "command": "vt220.disableEffects",
-        "title": "VT220: Disable VT220 UI effects"
+        "title": "VT220: Disable theme"
       }
     ],
     "configuration": {

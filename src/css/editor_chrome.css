@@ -58,18 +58,13 @@ body.windows {
   max-width: 80%;
 }
 
+.context-view.monaco-menu-container,
 .monaco-workbench .part > .content {
   font-size: 16px;
   letter-spacing: 1px;
 }
 
 /* Popups and hover blocks */
-.monaco-hover {
-  /* animation: glitch 1.5s linear infinite; */
-}
-
-.monaco-hover.hidden {
-}
 
 .crt-size {
   position: absolute;
@@ -84,7 +79,7 @@ body.windows {
 }
 
 .monaco-workbench {
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 0.4px;
 }
 
@@ -120,46 +115,6 @@ body.windows {
   color: var(--blue);
 }
 
-/* Screen effects, vignete, scanlines, etc */
-/* body.windows:before { */
-.scanlines:after {
-  content: ' ';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-
-  background-size: 100% 2px, 3px 100%;
-  pointer-events: none;
-  /* z-index: 600; */
-}
-
-.flicker {
-  animation: flicker 5ms infinite;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-/* .monaco-split-view2.vertical
-  > .monaco-scrollable-element
-  > .split-view-container
-  > .split-view-view {
-  max-height: 92% !important;
-} */
-
-.monaco-workbench .part.editor > .content .editor-group-container {
-}
-
-.main-container .split-view-container > div:first-of-type {
-}
-
-.main-container .split-view-container > div:nth-of-type(3) {
-  /* z-index: 5; */
-}
-
 .main-container .split-view-container > div:nth-of-type(4) {
   background-color: #282828 !important;
 }
@@ -175,14 +130,23 @@ body.windows {
 
 /* Button */
 .monaco-text-button {
-  transition: all 220ms ease-in-out;
-  box-shadow: 0 0 2px #80ffc000, 0 0 6px #4faf4c00, 0 0 10px #4faf4c00, 0 0 12px #50af4c00;
+  transition: all 1s ease;
+  box-shadow: 0 0 3px #80ffc000, 0 0 6px #4faf4c00;
+  font-size: 14px;
 }
 
 .monaco-text-button:hover {
-  background: rgb(80, 175, 76) !important;
-  box-shadow: 0 0 2px #80ffc0, 0 0 6px #50af4c, 0 0 10px #50af4c, 0 0 12px #50af4c;
-  color: #282828 !important;
+  background: var(--foreground) !important;
+  box-shadow: 0 0 3px var(--foreground), 0 0 6px var(--foreground);
+  color: var(--background) !important;
+}
+
+.notification-list-item-source {
+  font-size: 14px;
+}
+
+.notification-list-item-main-row {
+  font-size: 18px;
 }
 
 .activitybar {
@@ -200,7 +164,7 @@ body.windows {
 .activitybar .actions-container .action-item:hover .action-label {
   background: var(--foreground) !important;
   animation: blink2 3s linear forwards;
-  /* box-shadow: 0 0 2px #80ffc0, 0 0 6px #50af4c, 0 0 10px #50af4c, 0 0 12px #50af4c; */
+
   box-shadow: 0 0 3px var(--foreground), 0 0 6px var(--foreground) !important;
   color: #282828 !important;
 }
@@ -277,7 +241,7 @@ body.windows {
 }
 
 .menubar {
-  font-size: 13px;
+  font-size: 14px;
   margin-left: 18px;
 }
 
@@ -307,20 +271,32 @@ body.windows {
 /* Window controls */
 .monaco-workbench .part.titlebar > .window-controls-container {
   width: auto;
-  margin-right: 18px !important;
+  margin-right: 8px !important;
 }
 
 .monaco-workbench .part.titlebar > .window-controls-container .window-icon {
   font-family: var(--font-glass);
-  font-size: 14px;
+  font-size: 16px !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* transition: all 220ms ease-in-out; */
+  text-shadow: 0 0 3px transparent, 0 0 12px transparent;
+  transition: all 220ms ease-in-out;
 }
 
 .monaco-workbench .part.titlebar > .window-controls-container > .window-icon:hover {
   animation: blink2 2s alternate infinite;
+  background-color: transparent !important;
+  text-shadow: 0 0 3px var(--foreground), 0 0 12px var(--foreground);
+}
+
+.monaco-list-row {
+  text-shadow: 0 0 0 transparent, 0 0 0 transparent;
+  transition: textShadow 1s ease, background 1s ease;
+}
+
+.monaco-list-row > * {
+  transition: textShadow 1s ease, background 1s ease;
 }
 
 .settings-editor
@@ -329,47 +305,37 @@ body.windows {
   .monaco-list:focus-within
   .monaco-list-row.focused
   .setting-item-contents {
-  border: 1px solid #50af4c !important;
+  border: none !important;
 }
 
-.settings-editor
-  > .settings-body
-  > .settings-tree-container
-  .setting-item-contents
-  .setting-item-description,
-.settings-editor
-  > .settings-body
-  > .settings-tree-container
-  .setting-item-contents
-  .setting-item-label,
-.settings-editor
-  > .settings-body
-  > .settings-tree-container
-  .setting-item-contents
-  .setting-item-category,
-.settings-editor
-  > .settings-body
-  > .settings-tree-container
+.settings-tree-container .setting-item-contents .setting-item-description,
+.settings-tree-container .setting-item-contents .setting-item-label,
+.settings-tree-container .setting-item-contents .setting-item-category,
+.settings-tree-container
   .monaco-list:focus-within
   .monaco-list-row.focused
   .settings-group-title-label {
   text-shadow: none !important;
 }
 
-.settings-tree-container
-  .monaco-list:focus-within
-  .monaco-list-row.focused
-  .settings-group-title-label {
-  /* color: var(--background) !important; */
-}
 .settings-tree-container .monaco-list-row.focused.selected {
   background-color: transparent !important;
+}
+
+.settings-editor > .settings-body > .settings-tree-container .monaco-list-row.focused.selected {
+  color: var(--foreground);
+  box-shadow: none !important;
+}
+
+.settings-tree-container .monaco-list-row.focused.selected .monaco-icon-label:before,
+.settings-tree-container .monaco-list-row.focused.selected .monaco-icon-label:after {
+  color: var(--background) !important;
 }
 
 /* Pop ups and modals */
 .monaco-hover,
 .quick-input-widget {
-  animation: border-flicker 2s linear forwards;
+  animation: border-flicker 1s linear forwards;
 }
 
 /* Setting item labels and text */
@@ -380,10 +346,19 @@ body.windows {
   display: none !important;
 }
 
+.settings-editor > .settings-body > .settings-tree-container .monaco-list-row {
+  color: var(--foreground);
+}
+
 .monaco-list-row.focused.selected {
   color: var(--background) !important;
   font-weight: bold;
   background-color: var(--foreground) !important;
+  box-shadow: 0 0 1px var(--foreground), 0 0 3px var(--foreground);
+}
+
+.monaco-list-row.focused.selected .monaco-icon-label {
+  color: var(--background) !important;
 }
 
 .monaco-list-row.focused.selected .label-name {
@@ -436,9 +411,6 @@ body.windows {
 }
 
 /* Sidebar */
-.sidebar {
-}
-
 /* Lists */
 
 .monaco-workbench .part > .title > .title-label h2 {
@@ -452,19 +424,33 @@ body.windows {
 
 /* Current line number */
 .line-numbers {
+  font-family: var(--font-share-tech) !important;
+  font-size: 18px !important;
+  text-shadow: 0 0 3px transparent, 0 0 12px transparent;
+  transition: all 1s ease;
+}
+
+.line-number > * {
+  transition: all 1s ease;
 }
 
 .monaco-editor .line-numbers.active-line-number {
   color: var(--foreground) !important;
-  text-shadow: 0 0 3px var(--foreground), 0 0 24px var(--foreground) !important;
+  /* text-shadow: 0 0 3px var(--foreground), 0 0 12px var(--foreground); */
+  animation: lineNumberGlow 1s forwards;
+  animation-delay: 120ms;
 }
 
-.monaco-workbench .activitybar.left.bordered:before {
+.activitybar.left.bordered:before {
   border-right-style: dashed !important;
 }
 
-.monaco-workbench .activitybar.right.bordered:before {
+.activitybar.right.bordered:before {
   border-left-style: dashed !important;
+}
+
+.activitybar > .content :not(.monaco-menu) > .monaco-action-bar .badge .badge-content {
+  box-shadow: 0 0 3px var(--foreground), 0 0 8px var(--foreground);
 }
 
 .status-border-top:after {
@@ -477,25 +463,8 @@ body.windows {
   background: none !important;
 }
 
-.tabs {
-}
-
-.monaco-workbench
-  .part.editor
-  > .content
-  .editor-group-container
-  > .title
-  .tabs-container
-  > .tab.active.tab-border-top
-  > .tab-border-top-container,
-.monaco-workbench
-  .part.editor
-  > .content
-  .editor-group-container
-  > .title
-  .tabs-container
-  > .tab.active.tab-border-bottom
-  > .tab-border-bottom-container {
+.tab-border-top-container,
+.tab-border-bottom-container {
   display: none !important;
 }
 
@@ -510,35 +479,65 @@ body.windows {
   a {
   font-family: var(--font-share-tech);
   font-size: 18px;
-  text-transform: uppercase;
-}
 
-.monaco-workbench
-  .part.editor
-  > .content
-  .editor-group-container
-  > .title
-  .tabs-container
-  > .tab.active {
-  border: none !important;
-  background-color: var(--foreground) !important;
 }
 
 .tab .monaco-icon-label:before,
+.tab .monaco-icon-label:after,
 .tab .label-description {
   color: var(--foreground) !important;
 }
 
-.tab.active a,
-.tab.active .monaco-icon-label:before,
-.tab.active .label-description {
+/* Tab group is inacive, set the label color */
+.editor-group-container.inactive > .title .tabs-container > .tab a {
+  color: var(--foreground) !important;
+}
+
+/* Tab group is active */
+.editor-group-container.active > .title .tabs-container > .tab .label-description {
+  color: var(--foreground) !important;
+}
+
+/* Active tab group AND active tab, change background */
+.editor-group-container.active > .title .tabs-container > .tab.active {
+  border: none !important;
+  background-color: var(--foreground) !important;
+}
+
+/* Tab group AND tab item are active, set label and icon colors */
+.editor-group-container.active > .title .tabs-container > .tab.active a,
+.editor-group-container.active > .title .tabs-container > .tab.active .monaco-icon-label:before,
+.editor-group-container.active > .title .tabs-container > .tab.active .monaco-icon-label:after,
+.editor-group-container.active > .title .tabs-container > .tab.active .label-description {
   color: var(--background) !important;
 }
 
-.tab:hover a,
-.tab.active:hover a,
-.tab:hover .monaco-icon-label:before,
-.tab:hover .label-description {
+/* Tab group AND tab item are active AND hover, set background */
+.editor-group-container.active > .title .tabs-container > .tab:hover.active {
+  background-color: var(--background) !important;
+}
+
+/* Tab group is active and tab item is inactive WHEN hover, set label and icon colors */
+.editor-group-container.active > .title .tabs-container > .tab:hover a,
+.editor-group-container.active > .title .tabs-container > .tab:hover .label-description,
+.editor-group-container.active > .title .tabs-container > .tab:hover .monaco-icon-label:before,
+.editor-group-container.active > .title .tabs-container > .tab:hover .monaco-icon-label:after {
+  color: var(--foreground) !important;
+}
+
+/* Tab group AND tab item are active AND hover, set label and icon foreground */
+.editor-group-container.active > .title .tabs-container > .tab.active:hover a,
+.editor-group-container.active > .title .tabs-container > .tab.active:hover .label-description,
+.editor-group-container.active
+  > .title
+  .tabs-container
+  > .tab.active:hover
+  .monaco-icon-label:before,
+.editor-group-container.active
+  > .title
+  .tabs-container
+  > .tab.active:hover
+  .monaco-icon-label:after {
   color: var(--foreground) !important;
 }
 
@@ -587,6 +586,7 @@ body.windows {
 .monaco-list .monaco-list-row.selected,
 .monaco-list.list_id_1:not(.drop-target) .monaco-list-row:hover:not(.selected):not(.focused) {
   /* animation: textShadow 1.6s infinite; */
+  background-color: rgba(80, 175, 76, 0.2);
 }
 
 .monaco-editor .cursors-layer .cursor {
@@ -627,6 +627,27 @@ body.windows {
 
 .paths {
   animation: paths 5s step-end infinite;
+}
+
+@keyframes lineNumberGlow {
+  0% {
+    text-shadow: 0 0 3px #4faf4c00, 0 0 24px #4faf4c00;
+  }
+  20% {
+    text-shadow: 0 0 3px rgba(79, 175, 76, 0.2), 0 0 24px rgba(79, 175, 76, 0.2);
+  }
+  40% {
+    text-shadow: 0 0 3px rgba(79, 175, 76, 0.4), 0 0 24px rgba(79, 175, 76, 0.4);
+  }
+  60% {
+    text-shadow: 0 0 3px rgba(79, 175, 76, 0.6), 0 0 24px rgba(79, 175, 76, 0.6);
+  }
+  80% {
+    text-shadow: 0 0 3px rgba(79, 175, 76, 0.8), 0 0 24px rgba(79, 175, 76, 0.8);
+  }
+  100% {
+    text-shadow: 0 0 3px var(--foreground), 0 0 24px var(--foreground);
+  }
 }
 
 @keyframes paths {
