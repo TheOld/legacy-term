@@ -1,16 +1,16 @@
 {
-  "name": "vt220-vscode",
-  "displayName": "VT220 Terminal UI",
-  "description": "A VT220 inspired theme with cool effects including chrome styling",
+  "name": "crt-vscode",
+  "displayName": "CRT UI",
+  "description": "A CRT inspired theme with cool effects including chrome styling",
   "version": "0.0.1",
   "author": "Leandro Rodrigues",
-  "publisher": "LeandroRodrigues",
+  "publisher": "leandro-rodrigues",
   "repository": {
     "type": "git",
     "url": "https://github.com/TheOld/legacy-term"
   },
   "engines": {
-    "vscode": "^1.50.0"
+    "vscode": "^1.59.0"
   },
   "keywords": [
     "retro",
@@ -21,57 +21,76 @@
     "Themes"
   ],
   "activationEvents": [
-    "*",
-    "onCommand:vt220.viewSettings"
+    "onCommand:crt.viewSettings",
+    "onCommand:crt.enableEffects",
+    "onCommand:crt.disableEffects"
   ],
   "main": "./src/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "test-compile": "tsc -p ./"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.5",
+    "autoprefixer": "^10.4.0",
+    "cssnano": "^5.0.12",
+    "file-url": "^3.0.0",
+    "node-fetch": "^2.6.1",
+    "postcss": "^8.4.5",
+    "semver": "^7.1.1",
+    "uglify-js": "^3.14.5",
+    "uuid": "^8.3.2"
+  },
   "contributes": {
     "themes": [
       {
-        "label": "VT220",
+        "label": "CRT",
         "uiTheme": "vs-dark",
-        "path": "./themes/vt220.json"
+        "path": "./themes/green.json"
       }
     ],
     "commands": [
       {
-        "command": "vt220.enableEffects",
-        "title": "VT220: Enable theme"
+        "command": "crt.enableEffects",
+        "title": "CRT: Enable theme"
       },
       {
-        "command": "vt220.viewSettings",
-        "title": "VT220: Settings"
+        "command": "crt.viewSettings",
+        "title": "CRT: Settings"
       },
       {
-        "command": "vt220.disableEffects",
-        "title": "VT220: Disable theme"
+        "command": "crt.disableEffects",
+        "title": "CRT: Disable theme"
       }
     ],
     "configuration": {
-      "title": "VT220",
-      "description": "You can manually set values here, but is just best to use the VT220 Settings webview.",
+      "title": "CRT",
+      "description": "You can manually set values here, but is just best to use the CRT Settings webview.",
       "properties": {
-        "vt220.brightness": {
+        "crt.brightness": {
           "type": "number",
           "default": 100,
           "description": "Set the brightness % value. Requires restart"
         },
-        "vt220.saturation": {
+        "crt.saturation": {
           "type": "number",
           "default": 100,
           "description": "Set the saturation % value. Requires restart"
         },
-        "vt220.contrast": {
+        "crt.contrast": {
           "type": "number",
           "default": 100,
           "description": "Set the contrast % value. Requires restart"
         },
-        "vt220.crt": {
+        "crt.crt": {
           "type": "boolean",
           "default": true,
           "description": "Toggles the CRT effects. Requires restart"
         },
-        "vt220.color": {
+        "crt.color": {
           "type": "string",
           "default": "green",
           "description": "Set the color scheme. Requires restart"

@@ -1,462 +1,498 @@
-'use strict';
-const path = require('path');
+const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
+const diff = require('semver/functions/diff');
+const fetch = require('node-fetch');
 const fs = require('fs');
+const msg = require('./messages').messages;
+const path = require('path');
+const postcss = require('postcss');
+const Url = require('url');
+const uuid = require('uuid');
 const vscode = require('vscode');
-
-let currentPanel = undefined;
-const viewType = 'viewSettings';
-let _panel;
-let _extensionUri;
-let cntx;
-let cfg;
-const _disposables = [];
+const UglifyJS = require('uglify-js');
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-  this._extensionUri = vscode.Uri;
-  this.extensionName = 'LeandroRodrigues.vt220-vscode';
-  cfg = vscode.workspace.getConfiguration('vt220');
-  cntx = context;
+  this.extensionName = 'leandro-rodrigues.crt-vscode';
 
-  if (checkInit()) {
-    vscode.workspace.onDidChangeConfiguration(handleConfigChanged);
-  }
-
-  const settings = vscode.commands.registerCommand('vt220.viewSettings', createSettingsPanel);
-
-  const disposable = vscode.commands.registerCommand('vt220.enableEffects', init);
-
-  const disable = vscode.commands.registerCommand('vt220.disableEffects', uninstall);
-
-  context.subscriptions.push(settings);
-  context.subscriptions.push(disposable);
-  context.subscriptions.push(disable);
-}
-
-function handleConfigChanged() {}
-
-function init(config) {
-  const isWin = /^win/.test(process.platform);
   const appDir = path.dirname(require.main.filename);
-  const base = appDir + (isWin ? '\\vs\\code' : '/vs/code');
+  const base = path.join(appDir, 'vs', 'code');
 
-  const htmlFile =
-    base +
-    (isWin
-      ? '\\electron-browser\\workbench\\workbench.html'
-      : '/electron-browser/workbench/workbench.html');
+  const BackupFilePath = (uuid) =>
+    path.join(base, 'electron-browser', 'workbench', `workbench.${uuid}.bak-crt`);
 
-  const templateFile =
-    base +
-    (isWin ? '\\electron-browser\\workbench\\vt220.js' : '/electron-browser/workbench/vt220.js');
+  const htmlFile = path.join(base, 'electron-browser', 'workbench', 'workbench.html');
 
-  try {
-    // modify workbench html
-    const html = fs.readFileSync(htmlFile, 'utf-8');
-
-    // By default we get the values from the config
-    let { contrast, saturation, brightness, crt, color } =
-      vscode.workspace.getConfiguration('vt220');
-
-    // If we're editing, we'll get the values from the UI instead
-    if (config) {
-      // hue = config.hue || hue;
-      contrast = config.contrast;
-      saturation = config.saturation;
-      brightness = config.brightness;
-      crt = config.crt;
-      color = config.color;
-    }
-
-    let foreground = '#50af4c';
-    switch (color) {
-      case 'blue':
-        foreground = `#00b7ff`;
-        break;
-      case 'amber':
-        foreground = `#ffb000`;
-        break;
-      case 'green':
-      default:
-        foreground = '#50af4c';
-        break;
-    }
-
-    // Generate chrome styles from css to inject
-    const chromeStyles = fs.readFileSync(__dirname + '/css/editor_chrome.css', 'utf-8');
-    const jsTemplate = fs.readFileSync(__dirname + '/js/theme_template.js', 'utf-8');
-    const themeWithChrome = jsTemplate.replace(/\[CHROME_STYLES\]/g, chromeStyles);
-    // const themeWithHue = themeWithChrome.replace(/\[HUE\]/g, hue);
-    const themeWithSat = themeWithChrome.replace(/\[SATURATION\]/g, saturation);
-    const themeWithContrast = themeWithSat.replace(/\[CONTRAST\]/g, contrast);
-    const themeWithBrightness = themeWithContrast.replace(/\[BRIGHTNESS\]/g, brightness);
-    const themeWithForeground = themeWithBrightness.replace(/\[FOREGROUND\]/g, foreground);
-    const themeWithCrt = themeWithForeground.replace(/\[CRT\]/g, crt);
-
-    fs.writeFileSync(templateFile, themeWithCrt, 'utf-8');
-
-    // check if the tag is already there
-    const isEnabled = html.includes('vt220.js');
-
-    let output = html.replace(
-      /^.*(<!-- VT220 --><script src="vt220.js"><\/script><!-- VT220 -->).*\n?/gm,
-      '',
-    );
-
-    // add script tag
-    output = output.replace(
-      /<\/html>/g,
-      `	<!-- VT220 --><script src="vt220.js"></script><!-- VT220 -->\n`,
-    );
-
-    output += '</html>';
-
-    fs.writeFileSync(htmlFile, output, 'utf-8');
-
-    setColorScheme(config);
-
-    if (!isEnabled) {
-      vscode.window
-        .showInformationMessage(
-          'VT220 is enabled. VS Code must reload for this change to take effect.',
-          { title: 'Restart VS Code to complete' },
-        )
-        .then(function (msg) {
-          vscode.commands.executeCommand('workbench.action.reloadWindow');
-        });
+  async function getFileContent(url) {
+    if (/^file:/.test(url)) {
+      const fp = Url.fileURLToPath(url);
+      return await fs.promises.readFile(fp);
     } else {
-      vscode.window
-        .showInformationMessage('VS code must reload for changes to take effect.', {
-          title: 'Restart VS Code to refresh settings',
-        })
-        .then(function (msg) {
-          vscode.commands.executeCommand('workbench.action.reloadWindow');
-        });
-    }
-  } catch (e) {
-    console.error(e);
-    if (/ENOENT|EACCES|EPERM/.test(e.code)) {
-      vscode.window.showInformationMessage(
-        'You must run VS code with admin priviliges in order to enable VT220.',
-      );
-      return;
-    } else {
-      vscode.window.showErrorMessage('Something went wrong when starting VT220');
-      return;
+      const response = await fetch(url);
+      return response.buffer();
     }
   }
-}
 
-function setColorScheme(config) {
-  try {
-    const cfg = vscode.workspace.getConfiguration('vt220');
-
-    let color = config ? config.color : cfg.color;
-
-    const src = path.join(__dirname, '..', 'themes', `${config.color}.json`);
-    const dest = path.join(__dirname, '..', 'themes', 'vt220.json');
-
-    fs.copyFile(src, dest, () => {
-      console.log('Copied Successfully!');
-    });
-  } catch (error) {
-    vscode.window.showErrorMessage('Something went wrong when starting VT220');
+  async function install() {
+    try {
+      const uuidSession = uuid.v4();
+      await createBackup(uuidSession);
+      await patch(uuidSession);
+    } catch (error) {
+      console.error(error);
+    }
   }
-}
 
-// this method is called when your extension is deactivated
-function deactivate() {
-  // ...
-}
+  async function reinstall() {
+    await uninstallImpl();
+    await install();
+  }
 
-function uninstall() {
-  var isWin = /^win/.test(process.platform);
-  var appDir = path.dirname(require.main.filename);
-  var base = appDir + (isWin ? '\\vs\\code' : '/vs/code');
-  var htmlFile =
-    base +
-    (isWin
-      ? '\\electron-browser\\workbench\\workbench.html'
-      : '/electron-browser/workbench/workbench.html');
+  async function uninstall() {
+    await uninstallImpl();
+    restart();
+  }
 
-  // modify workbench html
-  const html = fs.readFileSync(htmlFile, 'utf-8');
+  async function uninstallImpl() {
+    const backupUuid = await getBackupUuid(htmlFile);
+    if (!backupUuid) return;
 
-  // check if the tag is already there
-  const isEnabled = html.includes('vt220.js');
+    const backupPath = BackupFilePath(backupUuid);
+    await restoreBackup(backupPath);
+    await deleteBackupFiles();
+  }
 
-  if (isEnabled) {
-    // delete synthwave script tag if there
-    let output = html.replace(
-      /^.*(<!-- VT220 --><script src="vt220.js"><\/script><!-- VT220 -->).*\n?/gm,
-      '',
+  async function getBackupUuid(htmlFilePath) {
+    try {
+      const htmlContent = await fs.promises.readFile(htmlFilePath, 'utf-8');
+
+      const match = htmlContent.match(/<!-- CRT-ID ([0-9a-fA-F-]+) -->/);
+
+      if (!match) {
+        return null;
+      } else {
+        return match[1];
+      }
+    } catch (e) {
+      vscode.window.showInformationMessage(`${msg.genericError}${e}`);
+      throw e;
+    }
+  }
+
+  async function createBackup(uuidSession) {
+    try {
+      let html = await fs.promises.readFile(htmlFile, 'utf-8');
+      html = clearExistingPatches(html);
+
+      await fs.promises.writeFile(BackupFilePath(uuidSession), html, 'utf-8');
+    } catch (e) {
+      vscode.window.showInformationMessage(msg.admin);
+      throw e;
+    }
+  }
+
+  function clearExistingPatches(html) {
+    html = html.replace(/<!-- CRT -->[\s\S]*?<!-- CRT -->\n*/, '');
+    html = html.replace(/<!-- CRT-ID [\w-]+ -->\n*/g, '');
+
+    return html;
+  }
+
+  /**
+   * Restores the backed up workbench.html file
+   * @param  {} backupFilePath
+   */
+  async function restoreBackup(backupFilePath) {
+    try {
+      if (fs.existsSync(backupFilePath)) {
+        await fs.promises.unlink(htmlFile);
+        await fs.promises.copyFile(backupFilePath, htmlFile);
+      }
+    } catch (e) {
+      vscode.window.showInformationMessage(msg.admin);
+      throw e;
+    }
+  }
+
+  async function deleteBackupFiles() {
+    const htmlDir = path.dirname(htmlFile);
+    const htmlDirItems = await fs.promises.readdir(htmlDir);
+
+    for (const item of htmlDirItems) {
+      if (item.endsWith('.bak-crt')) {
+        await fs.promises.unlink(path.join(htmlDir, item));
+      }
+    }
+  }
+
+  /**
+   * Loads the CSS file's contents to be injected into the main HTML document
+   * @param  {} uuidSession
+   */
+  async function patch(uuidSession) {
+    let html = await fs.promises.readFile(htmlFile, 'utf-8');
+    html = clearHTML(html);
+    html = html.replace(/<meta.*http-equiv="Content-Security-Policy".*>/, '');
+
+    const styleTags = await getTags('styles');
+    const jsTags = await getTags('javascript');
+
+    html = html.replace(
+      /(<\/html>)/,
+      `<!-- CRT-ID ${uuidSession} -->\n` +
+        '<!-- CRT-CSS-START -->\n' +
+        styleTags +
+        jsTags +
+        '<!-- CRT-CSS-END -->\n</html>',
     );
-    fs.writeFileSync(htmlFile, output, 'utf-8');
 
-    vscode.window
-      .showInformationMessage(
-        'VT220 disabled. VS code must reload for this change to take effect',
-        { title: 'Restart editor to complete' },
-      )
-      .then(function (msg) {
-        vscode.commands.executeCommand('workbench.action.reloadWindow');
-      });
-  } else {
-    vscode.window.showInformationMessage("VT220 isn't running.");
-  }
-}
-
-function showSettings() {
-  try {
-    console.info('Showing settings');
-
-    if (currentPanel) {
-      currentPanel._update();
+    try {
+      await fs.promises.writeFile(htmlFile, html, 'utf-8');
+    } catch (e) {
+      vscode.window.showInformationMessage(msg.admin);
+      disabledRestart();
     }
-  } catch (error) {
-    console.log(error);
+
+    enabledRestart();
   }
-}
 
-function createSettingsPanel() {
-  try {
-    const { extensionUri } = cntx;
-    const column = vscode.window.activeTextEditor
-      ? vscode.window.activeTextEditor.viewColumn
-      : undefined;
+  async function getTags(target) {
+    const config = vscode.workspace.getConfiguration('crt');
 
-    const config = vscode.workspace.getConfiguration('vt220');
+    if (target === 'styles') {
+      let res = '';
 
-    if (currentPanel) {
-      currentPanel._panel.reveal(column);
-      currentPanel._panel.webview.postMessage({ type: 'config', data: config });
+      const styles = ['/css/editor_chrome.css'];
 
-      if (checkInit()) {
-        currentPanel._panel.webview.postMessage({ type: 'initialized' });
+      for (const url of styles) {
+        const imp = await buildTag(url);
+
+        if (imp) {
+          res += imp;
+        }
       }
 
-      return;
+      return res;
     }
 
-    // Otherwise, create a new panel.
-    const panel = vscode.window.createWebviewPanel(
-      `vt220.viewSettings`,
-      'VT220 Theme settings',
-      column || vscode.ViewColumn.One,
-      getWebviewOptions(extensionUri),
-    );
+    if (target === 'javascript') {
+      let res = '';
+      const js = ['/js/theme_template.js'];
 
-    currentPanel = new SettingsPanel(panel, extensionUri);
+      for (const url of js) {
+        const jsTemplate = await fs.promises.readFile(__dirname + url);
 
-    currentPanel._panel.webview.postMessage({ type: 'config', data: config });
+        const buffer = jsTemplate.toString();
+        const themeWithEffects = buffer.replace(/\[CRT\]/g, config.crt);
+        const uglyJS = UglifyJS.minify(themeWithEffects);
+        const tag = `<script>${uglyJS.code}</script>\n`;
 
-    if (checkInit()) {
-      currentPanel._panel.webview.postMessage({ type: 'initialized', data: config });
-      currentPanel._panel.webview.postMessage({ type: 'config-changed', data: config });
-    }
-  } catch (error) {
-    vscode.window.showInformationMessage(error);
-  }
-}
-
-function checkInit() {
-  try {
-    const isWin = /^win/.test(process.platform);
-    const appDir = path.dirname(require.main.filename);
-    const base = appDir + (isWin ? '\\vs\\code' : '/vs/code');
-
-    const htmlFile =
-      base +
-      (isWin
-        ? '\\electron-browser\\workbench\\workbench.html'
-        : '/electron-browser/workbench/workbench.html');
-
-    const html = fs.readFileSync(htmlFile, 'utf-8');
-    const isEnabled = html.includes('vt220.js');
-
-    return isEnabled;
-  } catch (error) {
-    console.log(error);
-    console.log(typeof error);
-    vscode.window.showErrorMessage(error);
-  }
-}
-
-function getWebviewOptions(extensionUri) {
-  return {
-    // Enable javascript in the webview
-    enableScripts: true,
-
-    // And restrict the webview to only loading content from our extension's `media` directory.
-    // localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'media')],
-  };
-}
-
-function showCustomSettingsPage() {
-  try {
-    const panel = vscode.window.createWebviewPanel(
-      `vt220.viewSettings`,
-      'VT220 Theme settings',
-      vscode.ViewColumn.One,
-      {
-        enableScripts: true,
-      },
-    );
-
-    const isWin = /^win/.test(process.platform);
-    const filePath = isWin ? '\\src\\settings.html' : '/src/settings.html';
-
-    const viewPath = `${__dirname}${filePath}`;
-    const viewResourcePath = panel.webview.asWebviewUri(viewPath);
-    const htmlContent = fs.readFileSync(viewPath, 'utf-8');
-
-    panel.webview.html = htmlContent;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-class SettingsPanel {
-  constructor(panel, extensionUri) {
-    this._panel = panel;
-    this._extensionUri = extensionUri;
-
-    // Set the webview's initial html content
-    this._update();
-
-    // Listen for when the panel is disposed
-    // This happens when the user closes the panel or when the panel is closed programmatically
-    this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-
-    // Update the content based on view changes
-    this._panel.onDidChangeViewState(
-      (e) => {
-        if (this._panel.visible) {
-          this._update();
+        if (tag) {
+          res += tag;
         }
-      },
-      null,
-      this._disposables,
-    );
+      }
 
-    // Handle messages from the webview
-    this._panel.webview.onDidReceiveMessage(
-      (message) => {
-        console.log(message);
-        switch (message.prop) {
-          case 'settings':
-            const { hue, brightness, contrast, saturation, color } = message.value;
-            // vscode.workspace
-            //   .getConfiguration()
-            //   .update('vt220.hue', hue, vscode.ConfigurationTarget.Global);
-            vscode.workspace
-              .getConfiguration()
-              .update('vt220.brightness', parseInt(brightness), vscode.ConfigurationTarget.Global);
-            vscode.workspace
-              .getConfiguration()
-              .update('vt220.saturation', parseInt(saturation), vscode.ConfigurationTarget.Global);
-            vscode.workspace
-              .getConfiguration()
-              .update('vt220.contrast', parseInt(contrast), vscode.ConfigurationTarget.Global);
-            vscode.workspace
-              .getConfiguration()
-              .update('vt220.color', color, vscode.ConfigurationTarget.Global);
+      return res;
+    }
+  }
 
-            init(message.value);
+  const minifyCss = async (css) => {
+    // We pass in an array of the plugins we want to use: `cssnano` and `autoprefixer`
+    const output = await postcss([cssnano]).process(css);
 
-            return;
-          case 'toggle-crt': {
-            const { crt } = message.value;
+    return output.css;
+  };
 
-            vscode.workspace
-              .getConfiguration()
-              .update('vt220.crt', crt, vscode.ConfigurationTarget.Global);
+  async function buildTag(url) {
+    try {
+      const fetched = await fs.promises.readFile(__dirname + url);
 
-            init(message.value);
+      const miniCSS = await minifyCss(fetched);
 
-            return;
+      return `<style>${miniCSS}</style>\n`;
+    } catch (e) {
+      console.error(e);
+      vscode.window.showWarningMessage(msg.cannotLoad + url);
+      return '';
+    }
+  }
+  /**
+   * Removes injected files from workbench.html file
+   * @param  {} html
+   */
+  function clearHTML(html) {
+    html = html.replace(/<!-- CRT-CSS-START -->[\s\S]*?<!-- CRT-CSS-END -->\n*/, '');
+    html = html.replace(/<!-- CRT-ID [\w-]+ -->\n*/g, '');
+
+    return html;
+  }
+
+  function enabledRestart() {
+    vscode.window.showInformationMessage(msg.enabled, { title: msg.restartIde }).then(reloadWindow);
+  }
+
+  function restart() {
+    vscode.window
+      .showInformationMessage(msg.disabled, { title: msg.restartIde })
+      .then(reloadWindow);
+  }
+
+  function reloadWindow() {
+    // reload vscode-window
+    vscode.commands.executeCommand('workbench.action.reloadWindow');
+  }
+
+  function getWebviewOptions(extensionUri) {
+    return {
+      // Enable javascript in the webview
+      enableScripts: true,
+
+      // And restrict the webview to only loading content from our extension's `media` directory.
+      // localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'media')],
+    };
+  }
+
+  function showCustomSettingsPage() {
+    try {
+      const panel = vscode.window.createWebviewPanel(
+        `crt.viewSettings`,
+        'CRT Theme settings',
+        vscode.ViewColumn.One,
+        {
+          enableScripts: true,
+        },
+      );
+
+      const isWin = /^win/.test(process.platform);
+      const filePath = isWin ? '\\src\\settings.html' : '/src/settings.html';
+
+      const viewPath = `${__dirname}${filePath}`;
+      const viewResourcePath = panel.webview.asWebviewUri(viewPath);
+      const htmlContent = fs.readFileSync(viewPath, 'utf-8');
+
+      panel.webview.html = htmlContent;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function showSettings() {
+    try {
+      console.info('Showing settings');
+
+      if (currentPanel) {
+        currentPanel._update();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function createSettingsPanel() {
+    try {
+      const { extensionUri } = cntx;
+      const column = vscode.window.activeTextEditor
+        ? vscode.window.activeTextEditor.viewColumn
+        : undefined;
+
+      const config = vscode.workspace.getConfiguration('crt');
+
+      if (currentPanel) {
+        currentPanel._panel.reveal(column);
+        currentPanel._panel.webview.postMessage({ type: 'config', data: config });
+
+        return;
+      }
+
+      // Otherwise, create a new panel.
+      const panel = vscode.window.createWebviewPanel(
+        `crt.viewSettings`,
+        'CRT Theme settings',
+        column || vscode.ViewColumn.One,
+        getWebviewOptions(extensionUri),
+      );
+
+      currentPanel = new SettingsPanel(panel, extensionUri);
+
+      currentPanel._panel.webview.postMessage({ type: 'config', data: config });
+
+      currentPanel._panel.webview.postMessage({ type: 'initialized', data: config });
+    } catch (error) {
+      vscode.window.showInformationMessage(error);
+    }
+  }
+
+  const installCRT = vscode.commands.registerCommand('crt.enableEffects', install);
+  const uninstallCRT = vscode.commands.registerCommand('crt.disableEffects', uninstall);
+  const updateCRT = vscode.commands.registerCommand('crt.reload', reinstall);
+
+  const settings = vscode.commands.registerCommand('crt.viewSettings', createSettingsPanel);
+
+  context.subscriptions.push(installCRT);
+  context.subscriptions.push(uninstallCRT);
+  context.subscriptions.push(updateCRT);
+  context.subscriptions.push(settings);
+
+   let currentPanel = undefined;
+   const viewType = 'viewSettings';
+   let _panel;
+   let _extensionUri;
+   let cntx = context;
+   let cfg;
+   const _disposables = [];
+  class SettingsPanel {
+    constructor(panel, extensionUri) {
+      this._panel = panel;
+      this._extensionUri = extensionUri;
+
+      // Set the webview's initial html content
+      this._update();
+
+      // Listen for when the panel is disposed
+      // This happens when the user closes the panel or when the panel is closed programmatically
+      this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
+
+      // Update the content based on view changes
+      this._panel.onDidChangeViewState(
+        (e) => {
+          if (this._panel.visible) {
+            this._update();
           }
-          case 'toggle-theme':
-            if (!checkInit()) {
-              init();
+        },
+        null,
+        this._disposables,
+      );
+
+      // Handle messages from the webview
+      this._panel.webview.onDidReceiveMessage(
+        (message) => {
+          console.log(message);
+          switch (message.prop) {
+            case 'settings':
+              const { hue, brightness, contrast, saturation, color } = message.value;
+              // vscode.workspace
+              //   .getConfiguration()
+              //   .update('vt220.hue', hue, vscode.ConfigurationTarget.Global);
+              vscode.workspace
+                .getConfiguration()
+                .update('crt.brightness', parseInt(brightness), vscode.ConfigurationTarget.Global);
+              vscode.workspace
+                .getConfiguration()
+                .update('crt.saturation', parseInt(saturation), vscode.ConfigurationTarget.Global);
+              vscode.workspace
+                .getConfiguration()
+                .update('crt.contrast', parseInt(contrast), vscode.ConfigurationTarget.Global);
+              vscode.workspace
+                .getConfiguration()
+                .update('crt.color', color, vscode.ConfigurationTarget.Global);
+
+              reinstall();
+
+              return;
+            case 'toggle-crt': {
+              const { crt } = message.value;
+
+              vscode.workspace
+                .getConfiguration()
+                .update('crt.crt', crt, vscode.ConfigurationTarget.Global);
+
+              reinstall();
 
               return;
             }
+            case 'toggle-theme':
+              if (!this.checkInit()) {
+                reinstall();
 
-            uninstall();
-            return;
-          case 'error':
-            vscode.window.showInformationMessage(message.value);
-            return;
-        }
-      },
-      null,
-      this._disposables,
-    );
-  }
+                return;
+              }
 
-  revive(panel, extensionUri) {
-    currentPanel = new SettingsPanel(panel, extensionUri);
-  }
+              uninstall();
+              return;
+            case 'error':
+              vscode.window.showInformationMessage(message.value);
+              return;
+          }
+        },
+        null,
+        this._disposables,
+      );
+    }
 
-  doRefactor() {
-    // Send a message to the webview webview.
-    // You can send any JSON serializable data.
-    this._panel.webview.postMessage({ command: 'refactor' });
-  }
+    async checkInit() {
+      const htmlContent = await fs.promises.readFile(htmlFile, 'utf-8');
 
-  dispose() {
-    currentPanel = undefined;
+      const match = htmlContent.match(/<!-- CRT-ID ([0-9a-fA-F-]+) -->/);
 
-    // Clean up our resources
-    this._panel.dispose();
+      if (!match) {
+        return false;
+      }
 
-    if (this._disposables) {
-      while (this._disposables.length) {
-        const x = this._disposables.pop();
-        if (x) {
-          x.dispose();
+      return true;
+    }
+
+    revive(panel, extensionUri) {
+      currentPanel = new SettingsPanel(panel, extensionUri);
+    }
+
+    doRefactor() {
+      // Send a message to the webview webview.
+      // You can send any JSON serializable data.
+      this._panel.webview.postMessage({ command: 'refactor' });
+    }
+
+    dispose() {
+      currentPanel = undefined;
+
+      // Clean up our resources
+      this._panel.dispose();
+
+      if (this._disposables) {
+        while (this._disposables.length) {
+          const x = this._disposables.pop();
+          if (x) {
+            x.dispose();
+          }
         }
       }
     }
-  }
 
-  _update() {
-    const webview = this._panel.webview;
+    _update() {
+      const webview = this._panel.webview;
 
-    this._render(webview);
-    const config = vscode.workspace.getConfiguration('vt220');
-    this._panel.webview.postMessage({ type: 'reload', data: config });
-  }
+      this._render(webview);
+      const config = vscode.workspace.getConfiguration('crt');
+      this._panel.webview.postMessage({ type: 'reload', data: config });
+    }
 
-  _render(webview) {
-    this._panel.title = 'VT220 Settings';
-    this._panel.webview.html = this._getHtmlForWebview(webview);
-  }
+    _render(webview) {
+      this._panel.title = 'CRT Settings';
+      this._panel.webview.html = this._getHtmlForWebview(webview);
+    }
 
-  _getHtmlForWebview(webview) {
-    // Local path to main script run in the webview
-    const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js');
+    _getHtmlForWebview(webview) {
+      // Local path to main script run in the webview
+      const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js');
 
-    const imagePathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'nope.gif');
+      const imagePathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'nope.gif');
 
-    // And the uri we use to load this script in the webview
-    const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
+      // And the uri we use to load this script in the webview
+      const scriptUri = scriptPathOnDisk.with({ scheme: 'vscode-resource' });
 
-    const imageUri = imagePathOnDisk.with({ scheme: 'vscode-resource' });
+      const imageUri = imagePathOnDisk.with({ scheme: 'vscode-resource' });
 
-    // Local path to css styles
-    const stylesPath = vscode.Uri.joinPath(this._extensionUri, 'media', 'terminal.css');
+      // Local path to css styles
+      const stylesPath = vscode.Uri.joinPath(this._extensionUri, 'media', 'terminal.css');
 
-    // Uri to load styles into webview
-    const stylesUri = webview.asWebviewUri(stylesPath);
+      // Uri to load styles into webview
+      const stylesUri = webview.asWebviewUri(stylesPath);
 
-    // Use a nonce to only allow specific scripts to be run
-    const nonce = getNonce();
+      // Use a nonce to only allow specific scripts to be run
+      const nonce = getNonce();
 
-    return `<!DOCTYPE html>
+      return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
 				<meta charset="UTF-8">
@@ -472,7 +508,7 @@ class SettingsPanel {
               <div class="text-area" id="outputEl">
                 <main class="main">
                  <div>***********************************************************************************</div>
-                  <h1 class="title">VT220 display set up</h1>
+                  <h1 class="title">CRT display set up</h1>
                   <div>***********************************************************************************</div>
                   <div class="warning">
                     <figure>
@@ -482,7 +518,7 @@ class SettingsPanel {
                     <h2 class="nope-text">You haven't enabled the main theme styles yet.</h2>
                     <p>
                       You can enable the theme by switching the power button or by executing the command
-                      <code> > VT220: Enable theme</code> on the Command Palette (needs a restart) [may take a few seconds].
+                      <code> > CRT: Enable theme</code> on the Command Palette (needs a restart) [may take a few seconds].
                     </p>
                   </div>
                   <div class="content hidden">
@@ -502,7 +538,7 @@ class SettingsPanel {
                     </p>
                     <p>
                       To completely disable the theme just switch the power button or execute
-                      <code> > VT220: Disable theme</code> on the Command Palette
+                      <code> > CRT: Disable theme</code> on the Command Palette
                     </p>
 
                     <form>
@@ -645,21 +681,23 @@ class SettingsPanel {
 
 			</body>
 			</html>`;
+    }
   }
-}
 
-function getNonce() {
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  function getNonce() {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 32; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
   }
-  return text;
+
+
 }
 
 exports.activate = activate;
 
-module.exports = {
-  activate,
-  deactivate,
-};
+// this method is called when your extension is deactivated
+function deactivate() {}
+exports.deactivate = deactivate;

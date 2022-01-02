@@ -8,9 +8,9 @@
   --blue: rgba(0, 30, 255, 0.6);
   --flush: #c92049;
   --font-glass: 'Glass TTY VT220', 'Share Tech Mono', Consolas, 'Courier New', monospace !important;
-  --font-share-tech: 'DEC Terminal Modern', 'Share Tech Mono', Consolas, 'Courier New', monospace !important;
-  --foreground: #50af4c;
-  --background: #282828;
+  --font-share-tech: 'OCR A', 'DEC Terminal Modern', 'Share Tech Mono', Consolas, 'Courier New', monospace !important;
+  --foreground: #66ff66;
+  --background: #011101;
   --hue: 0deg;
   --brightness: 100%;
   --saturation: 100%;
@@ -92,7 +92,7 @@ body.windows {
   letter-spacing: 10px;
 
   /* Bright things in dark environments usually cast that light, giving off a glow */
-  filter: drop-shadow(0 1px 3px);
+  /* filter: drop-shadow(0 1px 3px); */
 }
 
 .monaco-workbench .part.editor > .content .gettingStartedContainer h1:before,

@@ -5,7 +5,7 @@
   let config = undefined;
 
   // CRT Variables
-  let canvas = undefined;
+  // let canvas = undefined;
   let ctx = undefined;
   let canvasData = undefined;
   let data = undefined;
@@ -32,15 +32,12 @@
   };
 
   // Entrypoint, it all starts here
-  const initVT220 = (withCRT, obs) => {
+  const initCRT = (withCRT, obs) => {
     var themeStyleTag = document.querySelector('.vscode-tokens-styles');
 
     if (!themeStyleTag) {
       return;
     }
-
-    var initialThemeStyles = themeStyleTag.innerText;
-    var updatedThemeStyles = initialThemeStyles;
 
     // Additional classes
     const gridView = document.querySelector('.chromium > .monaco-grid-view');
@@ -48,31 +45,19 @@
 
     const content = document.querySelector('.main-container');
 
-    const styles = `:root { --saturation: [SATURATION]%; --contrast: [CONTRAST]%; --brightness: [BRIGHTNESS]%; }`;
-
-    console.info(styles);
-
-    /* append the remaining styles */
-    updatedThemeStyles = `${updatedThemeStyles}[CHROME_STYLES] :root { --saturation: [SATURATION]%; --contrast: [CONTRAST]%; --brightness: [BRIGHTNESS]%; --foreground: [FOREGROUND];}`;
-
-    const newStyleTag = document.createElement('style');
-    newStyleTag.setAttribute('id', 'vt220-theme-styles');
-    newStyleTag.innerText = updatedThemeStyles.replace(/(\r\n|\n|\r)/gm, '');
-    document.body.appendChild(newStyleTag);
-
-    if (withCRT) {
+    // if (withCRT) {
       const defaultCrtArgs = {
         scanLineColor: 0x33,
-        scanLineOpacity: 0.26,
-        pctNoise: 0.2,
-        pctFlicker: 0.275,
+        scanLineOpacity: 0.36,
+        pctNoise: 0.15,
+        pctFlicker: 0.05,
         refreshInterval: 200,
         blur: 0,
       };
-      initCRT({ ...defaultCrtArgs });
+      initCRTEffects({ ...defaultCrtArgs });
 
       requestAnimationFrame(loop);
-    }
+    // }
 
     // disconnect the observer because we don't need it anymore
     if (obs) {
@@ -96,7 +81,7 @@
     }
   };
 
-  const initCRT = ({
+  const initCRTEffects = ({
     scanLineColor,
     scanLineOpacity,
     pctNoise,
@@ -104,7 +89,8 @@
     refreshInterval,
     blur,
   }) => {
-    canvas = document.createElement('canvas');
+    const canvas = document.querySelector('canvas');
+    console.log(canvas);
 
     if (!canvas || !canvas.getContext) {
       return;
@@ -121,6 +107,7 @@
     canvas.width = w;
     canvas.height = h;
     ctx = canvas.getContext('2d');
+
     canvasData = ctx.getImageData(0, 0, w, h);
     data = canvasData.data;
 
@@ -188,8 +175,8 @@
     for (let mutation of mutationsList) {
       if (mutation.type === 'attributes') {
         // only init if we're using a VT220 subtheme
-        const isUsingVt220 = document.querySelector(
-          '[class*="LeandroRodrigues-vt220-vscode-themes"]',
+        const isUsingCRT = document.querySelector(
+          '[class*="leandro-rodrigues-crt-vscode-themes"]',
         );
         // does the style div exist yet?
         const tokensLoaded = document.querySelector('.vscode-tokens-styles');
@@ -197,34 +184,34 @@
         const tokenStyles = document.querySelector('.vscode-tokens-styles').innerText;
 
         // sometimes VS code takes a while to init the styles content, so stop this observer and add an observer for that
-        if (isUsingVt220 && tokensLoaded) {
+        if (isUsingCRT && tokensLoaded) {
           observer.disconnect();
           observer.observe(tokensLoaded, { childList: true });
         }
       }
       if (mutation.type === 'childList') {
-        const isUsingVt220 = document.querySelector(
-          '[class*="LeandroRodrigues-vt220-vscode-themes"]',
+        const isUsingCRT = document.querySelector(
+          '[class*="leandro-rodrigues-crt-vscode-themes"]',
         );
         const tokensLoaded = document.querySelector('.vscode-tokens-styles');
         const tokenStyles = document.querySelector('.vscode-tokens-styles').innerText;
 
         // Everything we need is ready, so initialise
-        if (isUsingVt220 && tokensLoaded && tokenStyles) {
-          initVT220([CRT], observer);
+        if (isUsingCRT && tokensLoaded && tokenStyles) {
+          initCRT([CRT], observer);
         }
       }
     }
   };
 
-  const setStatusbarTopPosition = () => {
-    const statusbarContainer = document.querySelector('.statusbar').parentElement;
-    statusbarContainer.style.setProperty('top', 'calc(100% - 37px)');
-    statusbarContainer.style.setProperty('z-index', '10');
-  };
+  // const setStatusbarTopPosition = () => {
+  //   const statusbarContainer = document.querySelector('.statusbar').parentElement;
+  //   statusbarContainer.style.setProperty('top', 'calc(100% - 37px)');
+  //   statusbarContainer.style.setProperty('z-index', '10');
+  // };
 
   // try to initialise the theme
-  initVT220([CRT]);
+  initCRT([CRT]);
 
   // Use a mutation observer to check when we can bootstrap the theme
   const observer = new MutationObserver(watchForBootstrap);
