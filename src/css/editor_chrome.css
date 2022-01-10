@@ -384,7 +384,8 @@ body::before {
   color: var(--background) !important;
   font-weight: bold;
   background-color: var(--foreground) !important;
-  box-shadow: 0 0 1px var(--foreground), 0 0 3px var(--foreground);
+  /* box-shadow: 0 0 1px var(--foreground), 0 0 3px var(--foreground); */
+  box-shadow: 0 0 3px var(--foreground), 0 0 12px var(--foreground);
 }
 
 .monaco-list-row.focused.selected .monaco-icon-label {
@@ -531,6 +532,7 @@ body::before {
 .editor-group-container.active > .title .tabs-container > .tab.active {
   border: none !important;
   background-color: var(--foreground) !important;
+  box-shadow: 0 0 3px var(--foreground), 0 0 12px var(--foreground);
 }
 
 /* Tab group AND tab item are active, set label and icon colors */
@@ -616,6 +618,7 @@ body::before {
 .monaco-list.list_id_1:not(.drop-target) .monaco-list-row:hover:not(.selected):not(.focused) {
   /* animation: textShadow 1.6s infinite; */
   /* background-color: rgba(80, 175, 76, 0.2); */
+  box-shadow: 0 0 3px rgba(0, 255, 102, 0.53), 0 0 12px rgba(0, 255, 102, 0.53);
 }
 
 .monaco-editor .cursors-layer .cursor {
