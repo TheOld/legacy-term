@@ -31,6 +31,14 @@
     document.documentElement.style.setProperty(property, value);
   };
 
+  const resizeObserver = new ResizeObserver((entries) => {
+    for (let entry of entries) {
+      if (entry.contentBoxSize) {
+        readjustLayout();
+      }
+    }
+  });
+
   // Entrypoint, it all starts here
   const initCRT = (withCRT, obs) => {
     var themeStyleTag = document.querySelector('.vscode-tokens-styles');
@@ -43,20 +51,23 @@
     const gridView = document.querySelector('.chromium > .monaco-grid-view');
     gridView.classList.add('main-container');
 
-    const content = document.querySelector('.main-container');
+    const content = document.querySelector('body');
+    const sidebar = document.querySelector('.sidebar');
+    resizeObserver.observe(content);
+    resizeObserver.observe(sidebar);
 
     // if (withCRT) {
-      const defaultCrtArgs = {
-        scanLineColor: 0x33,
-        scanLineOpacity: 0.36,
-        pctNoise: 0.15,
-        pctFlicker: 0.05,
-        refreshInterval: 200,
-        blur: 0,
-      };
-      initCRTEffects({ ...defaultCrtArgs });
+    const defaultCrtArgs = {
+      scanLineColor: 0x33,
+      scanLineOpacity: 0,
+      pctNoise: 0.25,
+      pctFlicker: 0.05,
+      refreshInterval: 200,
+      blur: 0,
+    };
+    initCRTEffects({ ...defaultCrtArgs });
 
-      requestAnimationFrame(loop);
+    requestAnimationFrame(loop);
     // }
 
     // disconnect the observer because we don't need it anymore
@@ -89,8 +100,7 @@
     refreshInterval,
     blur,
   }) => {
-    const canvas = document.querySelector('canvas');
-    console.log(canvas);
+    const canvas = document.createElement('canvas');
 
     if (!canvas || !canvas.getContext) {
       return;
@@ -100,14 +110,13 @@
       scanLineColor = 0;
     }
 
-    alpha = scanLineOpacity === undefined ? 50 : Math.floor(255 * scanLineOpacity);
+    alpha = 0; //scanLineOpacity === undefined ? 50 : Math.floor(255 * scanLineOpacity);
     dAlpha = pctNoise === undefined ? 5 : 255 * pctNoise;
     amountFlicker = pctFlicker === undefined ? 0.2 : pctFlicker;
     refreshInterval = refreshInterval === undefined ? 60 : refreshInterval;
     canvas.width = w;
     canvas.height = h;
     ctx = canvas.getContext('2d');
-
     canvasData = ctx.getImageData(0, 0, w, h);
     data = canvasData.data;
 
@@ -115,11 +124,11 @@
       py = w * 4 * y;
       for (x = 0; x < w; x++) {
         px = py + x * 4;
-        if (scanLineColor) {
-          data[px] = scanLineColor;
-          data[px + 1] = scanLineColor;
-          data[px + 2] = scanLineColor;
-        }
+        // if (scanLineColor) {
+        //   data[px] = scanLineColor;
+        //   data[px + 1] = scanLineColor;
+        //   data[px + 2] = scanLineColor;
+        // }
         data[px + 3] = alpha + Math.random() * dAlpha;
       }
     }
@@ -138,14 +147,11 @@
        pointer-events:none;
        z-index:16777215;
        background-repeat:repeat;
+       will-change: background, opacity;
        background-image:url(${canvas.toDataURL('image/png')});`,
     );
 
-    if (blur > 0) {
-      document.body.style['filter'] = `blur(${blur}px)`;
-    }
-
-    document.querySelector('html').appendChild(overlay);
+    bodyNode.appendChild(overlay);
   };
 
   // put a random shade of gray into every pixel of the pattern
@@ -170,14 +176,31 @@
     requestAnimationFrame(loop);
   };
 
+  const readjustLayout = () => {
+    // const sidebarContainer = document.querySelector('.sidebar').parentElement;
+    // const statusbarContainer = document.querySelector('.statusbar').parentElement;
+    // const mainContent = sidebarContainer.nextElementSibling;
+    // const chromium = document.querySelector('.chromium');
+    // const content = document.querySelector('.editor>.content');
+    // // Editor width
+    // const width = document.body.clientWidth;
+    // const height = document.body.clientHeight;
+    // statusbarContainer.style.setProperty('top', `${height - 120}px`);
+    // chromium.style.setProperty('width', `${width - 120}px`);
+    // chromium.style.setProperty('height', `${height - 120}px`);
+    // chromium.style.setProperty('top', '55px');
+    // // 161 is right-margin + activity-bar
+    // let contentWidth = width - (240 - sidebarContainer.offsetWidth);
+    // mainContent.style.setProperty('width', `${contentWidth}px`);
+    // content.style.setProperty('width', `${contentWidth}px`);
+  };
+
   // Callback function to execute when mutations are observed
   const watchForBootstrap = (mutationsList, observer) => {
     for (let mutation of mutationsList) {
       if (mutation.type === 'attributes') {
         // only init if we're using a VT220 subtheme
-        const isUsingCRT = document.querySelector(
-          '[class*="leandro-rodrigues-crt-vscode-themes"]',
-        );
+        const isUsingCRT = document.querySelector('[class*="leandro-rodrigues-crt-vscode-themes"]');
         // does the style div exist yet?
         const tokensLoaded = document.querySelector('.vscode-tokens-styles');
         // does it have content ?
@@ -190,9 +213,7 @@
         }
       }
       if (mutation.type === 'childList') {
-        const isUsingCRT = document.querySelector(
-          '[class*="leandro-rodrigues-crt-vscode-themes"]',
-        );
+        const isUsingCRT = document.querySelector('[class*="leandro-rodrigues-crt-vscode-themes"]');
         const tokensLoaded = document.querySelector('.vscode-tokens-styles');
         const tokenStyles = document.querySelector('.vscode-tokens-styles').innerText;
 

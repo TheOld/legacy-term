@@ -21,7 +21,6 @@
     "Themes"
   ],
   "activationEvents": [
-    "onCommand:crt.viewSettings",
     "onCommand:crt.enableEffects",
     "onCommand:crt.disableEffects"
   ],
@@ -56,10 +55,6 @@
       {
         "command": "crt.enableEffects",
         "title": "CRT: Enable theme"
-      },
-      {
-        "command": "crt.viewSettings",
-        "title": "CRT: Settings"
       },
       {
         "command": "crt.disableEffects",
