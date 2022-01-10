@@ -1,6 +1,4 @@
-const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
-const diff = require('semver/functions/diff');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const msg = require('./messages').messages;
@@ -335,13 +333,13 @@ function activate(context) {
   context.subscriptions.push(updateCRT);
   context.subscriptions.push(settings);
 
-   let currentPanel = undefined;
-   const viewType = 'viewSettings';
-   let _panel;
-   let _extensionUri;
-   let cntx = context;
-   let cfg;
-   const _disposables = [];
+  let currentPanel = undefined;
+  const viewType = 'viewSettings';
+  let _panel;
+  let _extensionUri;
+  let cntx = context;
+  let cfg;
+  const _disposables = [];
   class SettingsPanel {
     constructor(panel, extensionUri) {
       this._panel = panel;
@@ -692,8 +690,6 @@ function activate(context) {
     }
     return text;
   }
-
-
 }
 
 exports.activate = activate;
