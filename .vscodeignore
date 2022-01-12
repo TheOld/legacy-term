@@ -3,4 +3,10 @@
 .gitignore
 src/js/theme_template.js
 src/css/editor_chrome.css
-vsc-extension-quickstart.md
+src/img/**
+bkp
+themes/amber.json
+themes/blue.json
+themes/crt.json
+themes/red.json
+*.vsix
