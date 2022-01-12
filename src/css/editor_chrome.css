@@ -5,7 +5,7 @@
   --yellow: yellow;
   --blue: rgba(0, 30, 255, 0.6);
   --flush: #c92049;
-  --font-mono: 'AcPlus IBM VGA 8x16', 'OCR-A', Consolas, 'Courier New', monospace !important;
+  --font-mono: 'AcPlus IBM VGA 8x16', 'OCR-A', 'OCR A', Consolas, 'Courier New', monospace !important;
   --foreground: #00ff66;
   --background: #000c00;
   --hue: 0deg;
