@@ -5,6 +5,11 @@
   "version": "0.0.2",
   "author": "Leandro Rodrigues",
   "publisher": "leandro-rodrigues",
+  "icon": "icon.jpg",
+  "galleryBanner": {
+    "color": "#000c00",
+    "theme": "light"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/TheOld/legacy-term"
