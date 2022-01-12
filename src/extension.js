@@ -1,13 +1,10 @@
-const cssnano = require('cssnano');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const msg = require('./messages').messages;
 const path = require('path');
-const postcss = require('postcss');
 const Url = require('url');
 const uuid = require('uuid');
 const vscode = require('vscode');
-const UglifyJS = require('uglify-js');
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -162,7 +159,7 @@ function activate(context) {
     if (target === 'styles') {
       let res = '';
 
-      const styles = ['/css/editor_chrome.css'];
+      const styles = ['/css/chrome.min.css'];
 
       for (const url of styles) {
         const imp = await buildTag(url);
@@ -177,15 +174,12 @@ function activate(context) {
 
     if (target === 'javascript') {
       let res = '';
-      const js = ['/js/theme_template.js'];
+      const js = ['/js/fx.min.js'];
 
       for (const url of js) {
         const jsTemplate = await fs.promises.readFile(__dirname + url);
 
-        const buffer = jsTemplate.toString();
-        const themeWithEffects = buffer.replace(/\[CRT\]/g, config.crt);
-        const uglyJS = UglifyJS.minify(themeWithEffects);
-        const tag = `<script>${uglyJS.code}</script>\n`;
+        const tag = `<script>${jsTemplate}</script>\n`;
 
         if (tag) {
           res += tag;
@@ -196,20 +190,11 @@ function activate(context) {
     }
   }
 
-  const minifyCss = async (css) => {
-    // We pass in an array of the plugins we want to use: `cssnano` and `autoprefixer`
-    const output = await postcss([cssnano]).process(css);
-
-    return output.css;
-  };
-
   async function buildTag(url) {
     try {
       const fetched = await fs.promises.readFile(__dirname + url);
 
-      const miniCSS = await minifyCss(fetched);
-
-      return `<style>${miniCSS}</style>\n`;
+      return `<style>${fetched}</style>\n`;
     } catch (e) {
       console.error(e);
       vscode.window.showWarningMessage(msg.cannotLoad + url);

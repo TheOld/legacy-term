@@ -1,4 +1,6 @@
 .vscode/**
 .vscode-test/**
 .gitignore
+src/js/theme_template.js
+src/css/editor_chrome.css
 vsc-extension-quickstart.md

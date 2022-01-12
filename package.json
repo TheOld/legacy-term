@@ -26,11 +26,8 @@
   ],
   "main": "./src/extension",
   "dependencies": {
-    "cssnano": "^5.0.12",
     "file-url": "^3.0.0",
     "node-fetch": "^2.6.1",
-    "postcss": "^8.4.5",
-    "uglify-js": "^3.14.5",
     "uuid": "^8.3.2"
   },
   "contributes": {
