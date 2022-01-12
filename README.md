@@ -50,9 +50,9 @@ If you don't want or can't install that font, the extension will fallback first 
 4. Restart VSCode
 
 > Note: If you uninstall the extension without running the `> CRT: Disable theme` command you will end up with leftover styles and your VSCode looking like limp poo (`panik`).
-You'll have to manually delete the code from the `workbench.html`, which, on Windows, is normally located at `C:\Users\<username>\AppData\Local\Programs\Microsoft VS Code\resources\app\out\vs\code\electron-browser\workbench\workbench.html`. I have no clue where that file would be on other OSs, but you're supposed to be an engineed, so you'll find it somehow.
+You'll have to manually delete the code from the `workbench.html`, which, on Windows, is normally located at `C:\Users\<username>\AppData\Local\Programs\Microsoft VS Code\resources\app\out\vs\code\electron-browser\workbench\workbench.html`. I have no clue where that file would be on other OSs, but you're supposed to be an engineer, so you'll find it somehow.
 1. Open that file and delete the `<style>` and `<script>` tags you'll find there before the closing `</html>` tag.
-2. *Kalm!
+2. `Kalm!`
 
 ## Things to keep in mind:
 
