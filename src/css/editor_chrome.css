@@ -5,7 +5,7 @@
   --yellow: yellow;
   --blue: rgba(0, 30, 255, 0.6);
   --flush: #c92049;
-  --font-mono: 'AcPlus IBM VGA 8x16', 'OCR-A', 'DEC Terminal Modern', Consolas, 'Courier New', monospace !important;
+  --font-mono: 'AcPlus IBM VGA 8x16', 'OCR-A', Consolas, 'Courier New', monospace !important;
   --foreground: #00ff66;
   --background: #000c00;
   --hue: 0deg;
@@ -13,8 +13,6 @@
   --saturation: 100%;
   --contrast: 104%;
 }
-
-/* TODO: Change HUE direction to change theme colours */
 
 /* Main window styles */
 body.windows {
@@ -36,10 +34,6 @@ body {
   background-color: var(--background) !important;
   margin: auto;
 }
-
-/* .chromium::after,
-.quick-input-widget::after,
-.notifications-center::after  */
 
 body::after {
   content: ' ';
