@@ -8,7 +8,7 @@
   "icon": "icon.jpg",
   "galleryBanner": {
     "color": "#000c00",
-    "theme": "light"
+    "theme": "dark"
   },
   "repository": {
     "type": "git",
