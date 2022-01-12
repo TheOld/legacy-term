@@ -20,7 +20,16 @@ on that regard and want to try their hand on this, feel free to open a PR.
 
 So, if you're looking for something to emulate the bad refresh-rate, hard to read text and retina burning bright colours, you may have found it.
 
+## Screenshots
+The sreenshots look a bit worse than they do when installed. I'm blaming the static noise effect for the crappy appearance.
 
+![Workbench](https://github.com/TheOld/legacy-term/blob/master/workbench.jpg?raw=true 'Workbench')
+
+![Command Palette](https://github.com/TheOld/legacy-term/blob/master/workbench2.jpg?raw=true 'Command palette')
+
+![Javascript](https://github.com/TheOld/legacy-term/blob/master/javascript.jpg?raw=true 'Javascript')
+
+![CSS](https://github.com/TheOld/legacy-term/blob/master/css.jpg?raw=true 'CSS')
 
 ## Install
 
