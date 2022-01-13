@@ -67,6 +67,7 @@ body::after {
   left: 0;
   z-index: 1;
   pointer-events: none;
+  mix-blend-mode: color-dodge;
 }
 
 /* Welcome page */
@@ -179,8 +180,18 @@ body::after {
   position: relative;
 }
 
-.activitybar .actions-container .action-item {
+.activitybar .actions-container .action-item,
+.activitybar .actions-container .action-item > svg {
   transition: all 220ms ease-in-out;
+  filter: drop-shadow(0 0 6px var(--foreground));
+}
+
+.activitybar .actions-container .action-item .action-label::before, .codicon::before {
+  text-shadow: 0 0 0 var(--foreground);
+}
+
+.statusbar .codicon::before {
+  filter: drop-shadow(0 0 1px var(--foreground)) !important;
 }
 
 .activitybar .actions-container .action-item.checked,
@@ -189,9 +200,13 @@ body::after {
 .activitybar .actions-container .action-item:hover .action-label {
   background: var(--foreground) !important;
   animation: blink2 3s linear forwards;
-
   box-shadow: 0 0 3px var(--foreground), 0 0 6px var(--foreground) !important;
   color: var(--background) !important;
+}
+.activitybar .actions-container .action-item:hover .badge-content,
+.activitybar .actions-container .action-item.checked .badge-content {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
 }
 
 .monaco-workbench
@@ -323,6 +338,12 @@ body::after {
   transition: textShadow 1s ease, background 1s ease;
 }
 
+.monaco-workbench .monaco-list .monaco-list-row .monaco-highlighted-label .highlight, .monaco-workbench .monaco-list .monaco-list-row.focused .monaco-highlighted-label .highlight {
+  color: inherit !important;
+  font-weight: bold !important;
+  text-decoration: underline;
+}
+
 .settings-editor
   > .settings-body
   > .settings-tree-container
@@ -385,7 +406,8 @@ body::after {
   color: var(--background) !important;
 }
 
-.monaco-list-row.focused.selected .label-name {
+.monaco-list-row.focused.selected .label-name,
+.monaco-list-row.focused.selected .action-label {
   color: var(--background) !important;
 }
 
@@ -441,6 +463,7 @@ body::after {
   font-size: 16px;
   color: var(--foreground) !important;
   font-family: var(--font-mono);
+  text-shadow: 0 0 1px var(--foreground), 0 0 6px var(--foreground);
 }
 
 /* Editor */
@@ -464,6 +487,15 @@ body::after {
   animation-delay: 80ms; */
 }
 
+.monaco-editor .find-widget .monaco-findInput .input {
+  font-size: 16px !important;
+}
+
+.monaco-editor .find-widget .codicon::before {
+  text-shadow: 0 0 0 var(--foreground);
+  filter: drop-shadow(0 0 1px var(--foreground));
+}
+
 .activitybar.left.bordered:before {
   border-right-style: dashed !important;
 }
@@ -473,7 +505,8 @@ body::after {
 }
 
 .activitybar > .content :not(.monaco-menu) > .monaco-action-bar .badge .badge-content {
-  box-shadow: 0 0 3px var(--foreground), 0 0 8px var(--foreground);
+  box-shadow: 0 0 1px var(--foreground), 0 0 4px var(--foreground);
+  border-radius: 0 !important;
 }
 
 .status-border-top:after {
@@ -618,7 +651,8 @@ body::after {
 }
 
 .monaco-editor .cursors-layer .cursor {
-  box-shadow: 0 0 3px var(--foreground), 0 0 12px var(--foreground);
+  box-shadow: 0 0 1px var(--foreground), 0 0 6px var(--foreground);
+  filter: drop-shadow(0 0 0 var(--foreground));
 }
 
 /* Dropdowns */
