@@ -41,7 +41,7 @@ The sreenshots make it look a bit worse than what it actually is. I'm blaming th
 
 ### Optional but highly recommended
 The workbench font has been changed to a more suitable one (as in more fitting with the CRT aesthetic), namelly the `IBM VGA 8x16`. It is freely available and you can download and install it from [here](https://int10h.org/oldschool-pc-fonts/fontlist/font?ibm_vga_8x16) (make sure you install the `Plus` version of that font).
-If you don't want or can't install that font, the extension will fallback first to `OCR-A`, which should be installed on the recent versions of Windows by default, if not, you can download it [here](https://sourceforge.net/projects/ocr-a-font/files/OCR-A/1.0/OCRA.ttf/download), otherwise it'll fallback to `Consolas` and `Courier New`, in that order. Not that any of this matter though.
+If you don't want or can't install that font, the extension will fallback first to `OCR-A`, which you can download [here](https://sourceforge.net/projects/ocr-a-font/files/OCR-A/1.0/OCRA.ttf/download), otherwise it'll fallback to `Consolas` and `Courier New`, in that order. Not that any of this matter though.
 
 ## Uninstall
 1. Run VSCode as admin `!important`
