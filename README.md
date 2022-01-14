@@ -21,23 +21,46 @@ on that regard and want to try their hand on this, feel free to open a PR.
 So, if you're looking for something to emulate the bad refresh-rate, hard to read text and retina burning bright colours, you may have found it.
 
 ## Screenshots
-The sreenshots make it look a bit worse than what it actually is. I'm blaming the static noise effect for the crappy appearance.
+Bellow you'll see some shots with the different theme options to choose.
 
-![Workbench](https://github.com/TheOld/legacy-term/blob/master/workbench.jpg?raw=true 'Workbench')
+> The sreenshots make it look a bit worse than what it actually is. I'm blaming the static noise effect for the crappy appearance on the screenshots.
 
-![Command Palette](https://github.com/TheOld/legacy-term/blob/master/workbench2.jpg?raw=true 'Command palette')
+For those wondering, the colours selected are the converted values from phosphor wavelenghts used on those CRT monitors, except for the blue one, which is converted from a phosphor wavelength, but that wasn't used on any monochrome monitors other than those from Apperture Laboratories.
 
-![Javascript](https://github.com/TheOld/legacy-term/blob/master/javascript.jpg?raw=true 'Javascript')
+## Themes
+### Default
+![Default](https://github.com/TheOld/legacy-term/blob/master/default.png?raw=true 'Default')
 
-![CSS](https://github.com/TheOld/legacy-term/blob/master/css.jpg?raw=true 'CSS')
+### Default with alt syntax theme
+![Default Alt](https://github.com/TheOld/legacy-term/blob/master/alt.png?raw=true 'DefaultAlt')
+
+### Green 1
+![Green 1](https://github.com/TheOld/legacy-term/blob/master/green1.png?raw=true 'Green1')
+
+### Green 2
+![Green 2](https://github.com/TheOld/legacy-term/blob/master/green2.png?raw=true 'Green2')
+
+### Apple II
+![Apple II](https://github.com/TheOld/legacy-term/blob/master/appleII.png?raw=true 'AppleII')
+
+### Apple IIc
+![Apple IIc](https://github.com/TheOld/legacy-term/blob/master/appleIIc.png?raw=true 'AppleIIc')
+
+### Amber
+![Amber](https://github.com/TheOld/legacy-term/blob/master/amber.png?raw=true 'Amber')
+
+### Blue
+![Blue](https://github.com/TheOld/legacy-term/blob/master/blue.png?raw=true 'Blue')
 
 ## Install
 
 1. Install the extension
 2. Start VSCode as admin `!important`
-3. Set the theme to `CRT`
+3. Select one of the `CRT` themes
 4. Run `> CRT: Enable theme`
 5. Restart VSCode
+
+After that, you can change the theme to any other, but 3rd party ones will lack integration, of course.
 
 ### Optional but highly recommended
 The workbench font has been changed to a more suitable one (as in more fitting with the CRT aesthetic), namelly the `IBM VGA 8x16`. It is freely available and you can download and install it from [here](https://int10h.org/oldschool-pc-fonts/fontlist/font?ibm_vga_8x16) (make sure you install the `Plus` version of that font).
