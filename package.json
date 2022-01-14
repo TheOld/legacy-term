@@ -2,7 +2,7 @@
   "name": "crt-vscode",
   "displayName": "VSCode CRT UI",
   "description": "A CRT inspired theme with cool effects including chrome styling",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "Leandro Rodrigues",
   "publisher": "leandro-rodrigues",
   "icon": "icon.jpg",
@@ -38,9 +38,44 @@
   "contributes": {
     "themes": [
       {
-        "label": "CRT",
+        "label": "CRT UI - Default",
         "uiTheme": "vs-dark",
-        "path": "./themes/green.json"
+        "path": "./themes/00ff66.json"
+      },
+      {
+        "label": "CRT UI - Default with alt syntax color",
+        "uiTheme": "vs-dark",
+        "path": "./themes/00ff66-alt.json"
+      },
+      {
+        "label": "CRT UI - Green 1",
+        "uiTheme": "vs-dark",
+        "path": "./themes/33ff00.json"
+      },
+      {
+        "label": "CRT UI - Green 2",
+        "uiTheme": "vs-dark",
+        "path": "./themes/00ff33.json"
+      },
+      {
+        "label": "CRT UI - Apple ][ (P1 phosphor)",
+        "uiTheme": "vs-dark",
+        "path": "./themes/33ff33.json"
+      },
+      {
+        "label": "CRT UI - Apple ][c (P24 phosphor)",
+        "uiTheme": "vs-dark",
+        "path": "./themes/66ff66.json"
+      },
+      {
+        "label": "CRT UI - Amber (P3 phosphor)",
+        "uiTheme": "vs-dark",
+        "path": "./themes/ffb000.json"
+      },
+      {
+        "label": "CRT UI - Blue (P55 BAM phosphor)",
+        "uiTheme": "vs-dark",
+        "path": "./themes/00b7ff.json"
       }
     ],
     "commands": [

@@ -15,13 +15,33 @@
   const patternScaleX = 3;
   const patternScaleY = 1;
   const patternRefreshInterval = 2;
-  const patternAlpha = 16; // int between 0 and 255,
+  const patternAlpha = 6; // int between 0 and 255,
 
   const patternPixelDataLength = patternSize * patternSize * 4;
   let patternCanvas = undefined;
   let patternCtx = undefined;
   let patternData = undefined;
   let frame = 0;
+
+  const accents = {
+    'default': 'rgb(0, 255, 102)',
+    'green1': 'rgb(51, 255, 0)',
+    'green2': 'rgb(0, 255, 51)',
+    'apple2': 'rgb(51, 255, 51)',
+    'apple2c': 'rgb(102, 255, 102)',
+    'amber': 'rgb(255, 176, 0)',
+    'blue': 'rgb(0, 183, 255)',
+  };
+
+  const backgrounds = {
+    'default': '#000c00',
+    'green1': '#000c00',
+    'green2': '#000c00',
+    'apple2': '#000c00',
+    'apple2c': '#000c00',
+    'amber': '#180F06',
+    'blue': '#00000c',
+  }
 
   const overrideDocumentStyle = ({ property, value }) => {
     document.documentElement.style.setProperty(property, value);
@@ -86,6 +106,72 @@
     requestAnimationFrame(loop);
   };
 
+  const watchAttributes = (mutationsList, observer) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'attributes') {
+        console.log('Attribute changed on chromium');
+        const chromium = document.querySelector('div.chromium');
+
+        const isGreen = document.querySelector('[class*="00ff66"]');
+        if (isGreen) {
+          overrideDocumentStyle({ property: '--foreground', value: accents.default });
+          overrideDocumentStyle({ property: '--background', value: backgrounds.default });
+
+          return;
+        }
+
+        const isGreen1 = document.querySelector('[class*="33ff00"]');
+        if (isGreen1) {
+          overrideDocumentStyle({ property: '--foreground', value: accents.green1 });
+          overrideDocumentStyle({ property: '--background', value: backgrounds.default });
+
+          return;
+        }
+
+        const isGreen2 = document.querySelector('[class*="00ff33"]');
+        if (isGreen2) {
+          overrideDocumentStyle({ property: '--foreground', value: accents.green2 });
+          overrideDocumentStyle({ property: '--background', value: backgrounds.default });
+
+          return;
+        }
+
+        const isApple2 = document.querySelector('[class*="33ff33"]');
+        if (isApple2) {
+          overrideDocumentStyle({ property: '--foreground', value: accents.apple2 });
+          overrideDocumentStyle({ property: '--background', value: backgrounds.default });
+
+          return;
+        }
+
+        const isApple2c = document.querySelector('[class*="66ff66"]');
+        if (isApple2c) {
+          overrideDocumentStyle({ property: '--foreground', value: accents.apple2c });
+          overrideDocumentStyle({ property: '--background', value: backgrounds.default });
+
+          return;
+        }
+
+        const isAmber = document.querySelector('[class*="ffb000"]');
+        if (isAmber) {
+          overrideDocumentStyle({ property: '--foreground', value: accents.amber });
+          overrideDocumentStyle({ property: '--background', value: backgrounds.amber });
+
+          return;
+        }
+
+        const isBlue = document.querySelector('[class*="00b7ff"]');
+        if (isBlue) {
+          overrideDocumentStyle({ property: '--foreground', value: accents.blue });
+          overrideDocumentStyle({ property: '--background', value: backgrounds.blue });
+
+          return;
+        }
+
+      }
+    }
+  };
+
     // Entrypoint, it all starts here
   const initCRT = (obs) => {
     console.log('CRT init');
@@ -100,6 +186,10 @@
     if (gridView) {
       gridView.classList.add('main-container');
     }
+
+    const chromium = document.querySelector('div.chromium');
+    const chromeThemeObserver = new MutationObserver(watchAttributes);
+    chromeThemeObserver.observe(chromium, { attributes: true });
 
     const noiseCanvas = document.querySelector('#canvas');
     if (!noiseCanvas) {

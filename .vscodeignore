@@ -5,8 +5,7 @@ src/js/theme_template.js
 src/css/editor_chrome.css
 src/img/**
 bkp
-themes/amber.json
-themes/blue.json
-themes/crt.json
 themes/red.json
+themes/crt.json
 *.vsix
+*.png
