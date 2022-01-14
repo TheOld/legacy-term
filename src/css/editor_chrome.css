@@ -217,13 +217,25 @@ body::after {
   background: #282828 !important;
 }
 
- .monaco-action-bar
+.monaco-workbench
+  .activitybar
+  > .content
+  :not(.monaco-menu)
+  > .monaco-action-bar
   .action-item.active
   .action-label.codicon,
- .monaco-action-bar
+.monaco-workbench
+  .activitybar
+  > .content
+  :not(.monaco-menu)
+  > .monaco-action-bar
   .action-item:focus
   .action-label.codicon,
- .monaco-action-bar
+.monaco-workbench
+  .activitybar
+  > .content
+  :not(.monaco-menu)
+  > .monaco-action-bar
   .action-item:hover
   .action-label.codicon {
   color: var(--background) !important;
