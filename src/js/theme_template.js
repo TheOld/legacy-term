@@ -112,60 +112,67 @@
         console.log('Attribute changed on chromium');
         const chromium = document.querySelector('div.chromium');
 
-        const isGreen = document.querySelector('[class*="00ff66"]');
+        const isGreen = document.querySelector('.leandro-rodrigues-crt-vscode-themes-00ff66-json');
         if (isGreen) {
+          console.log('Theme is default');
           overrideDocumentStyle({ property: '--foreground', value: accents.default });
           overrideDocumentStyle({ property: '--background', value: backgrounds.default });
 
-          return;
+
         }
 
-        const isGreen1 = document.querySelector('[class*="33ff00"]');
+        const isGreen1 = document.querySelector('.leandro-rodrigues-crt-vscode-themes-33ff00-json');
         if (isGreen1) {
+          console.log('Theme is green1');
           overrideDocumentStyle({ property: '--foreground', value: accents.green1 });
           overrideDocumentStyle({ property: '--background', value: backgrounds.default });
 
-          return;
+
         }
 
-        const isGreen2 = document.querySelector('[class*="00ff33"]');
+        const isGreen2 = document.querySelector('.leandro-rodrigues-crt-vscode-themes-00ff33-json');
         if (isGreen2) {
+          console.log('Theme is green2');
           overrideDocumentStyle({ property: '--foreground', value: accents.green2 });
           overrideDocumentStyle({ property: '--background', value: backgrounds.default });
 
-          return;
+
         }
 
-        const isApple2 = document.querySelector('[class*="33ff33"]');
+        const isApple2 = document.querySelector('.leandro-rodrigues-crt-vscode-themes-33ff33-json');
         if (isApple2) {
+          console.log('Theme is apple2');
           overrideDocumentStyle({ property: '--foreground', value: accents.apple2 });
           overrideDocumentStyle({ property: '--background', value: backgrounds.default });
 
-          return;
+
         }
 
-        const isApple2c = document.querySelector('[class*="66ff66"]');
+        const isApple2c = document.querySelector('.leandro-rodrigues-crt-vscode-themes-66ff66-json');
         if (isApple2c) {
+          console.log('Theme is apple2c');
           overrideDocumentStyle({ property: '--foreground', value: accents.apple2c });
           overrideDocumentStyle({ property: '--background', value: backgrounds.default });
 
-          return;
+
         }
 
-        const isAmber = document.querySelector('[class*="ffb000"]');
+        const isAmber = document.querySelector('.leandro-rodrigues-crt-vscode-themes-ffb000-json');
         if (isAmber) {
+          console.log('Theme is amber');
           overrideDocumentStyle({ property: '--foreground', value: accents.amber });
           overrideDocumentStyle({ property: '--background', value: backgrounds.amber });
 
-          return;
+
         }
 
-        const isBlue = document.querySelector('[class*="00b7ff"]');
+        const isBlue = document.querySelector('.leandro-rodrigues-crt-vscode-themes-00b7ff-json');
         if (isBlue) {
+          console.log('Theme is blue');
           overrideDocumentStyle({ property: '--foreground', value: accents.blue });
           overrideDocumentStyle({ property: '--background', value: backgrounds.blue });
 
-          return;
+
         }
 
       }
