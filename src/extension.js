@@ -174,7 +174,7 @@ function activate(context) {
 
     if (target === 'javascript') {
       let res = '';
-      const js = ['/js/fx.min.js'];
+      const js = ['/js/theme-min.js'];
 
       for (const url of js) {
         const jsTemplate = await fs.promises.readFile(__dirname + url);
