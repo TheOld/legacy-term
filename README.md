@@ -63,8 +63,7 @@ For those wondering, the colours selected are the converted values from phosphor
 After that, you can change the theme to any other, but 3rd party ones will lack integration, of course.
 
 ### Optional but highly recommended
-The workbench font has been changed to a more suitable one (as in more fitting with the CRT aesthetic), namelly the `IBM VGA 8x16`. It is freely available and you can download and install it from [here](https://int10h.org/oldschool-pc-fonts/fontlist/font?ibm_vga_8x16) (make sure you install the `Plus` version of that font).
-If you don't want or can't install that font, the extension will fallback first to `OCR-A`, which you can download [here](https://github.com/TheOld/legacy-term/raw/master/fonts/ocr-a.zip), otherwise it'll fallback to `Consolas` and `Courier New`, in that order. Not that any of this matter though.
+The workbench font has been changed to a more suitable one (as in more fitting with the CRT aesthetic), namelly  `OCR-A`, which you can download [here](https://github.com/TheOld/legacy-term/raw/master/fonts/ocr-a.zip), otherwise it'll fallback to `Consolas` and `Courier New`, in that order. Not that any of this matter though.
 
 ## Uninstall
 1. Run VSCode as admin `!important`
