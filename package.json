@@ -2,7 +2,7 @@
   "name": "crt-vscode",
   "displayName": "VSCode CRT UI",
   "description": "A CRT inspired theme with cool effects including chrome styling",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "author": "Leandro Rodrigues",
   "publisher": "leandro-rodrigues",
   "icon": "icon.jpg",
