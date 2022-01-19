@@ -265,6 +265,15 @@ body::after {
   color: var(--background) !important;
 }
 
+.monaco-workbench .search-view .findInFileMatch {
+  color: var(--foreground) !important;
+  text-decoration: underline;
+}
+
+.extension-list-item .monaco-action-bar .action-item .action-label.extension-action.label {
+  color: var(--foreground) !important;
+}
+
 .activitybar .actions-container .action-item .action-label {
   transition: color 1s ease;
 }
